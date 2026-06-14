@@ -1,0 +1,215 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Database is Postgres (Neon). Enum-like fields are stored as String and validated
+// at the API layer with Zod (src/utils/validators.ts) rather than as Prisma enums,
+// which keeps validation in one place and the schema portable.
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("CUSTOMER") // CUSTOMER | SHOPKEEPER | WAREHOUSE_MANAGER | OWNER
+  active       Boolean  @default(true) // owner can deactivate staff; inactive users cannot log in
+  createdBy    String? // userId of the owner who provisioned this staff account (null for self-registered customers/seed)
+  orders       Order[]
+  createdAt    DateTime @default(now())
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  brand       String
+  category    String
+  description String?
+  priceCents  Int // money as integer minor units — NEVER Float
+  imageUrl    String? // primary catalogue image (card + detail hero = first colour)
+  images      String[] @default([]) // legacy gallery shots (superseded by variants)
+  stock       Stock[]
+  variants    ProductVariant[] // the colour options this model is offered in
+  createdAt   DateTime @default(now())
+
+  @@index([brand])
+  @@index([category])
+}
+
+// A colour option for a Product (model). The store's hierarchy is
+// Brand (Product.brand) -> Model (Product) -> Colour (ProductVariant).
+model ProductVariant {
+  id        String  @id @default(cuid())
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  color     String // display name, e.g. "Rose Gold", "Classic Black"
+  imageUrl  String // the photo of this specific colourway
+  position  Int     @default(0) // display order; 0 is the primary colour
+
+  @@index([productId])
+}
+
+model Stock {
+  id           String  @id @default(cuid())
+  product      Product @relation(fields: [productId], references: [id])
+  productId    String
+  location     String // WAREHOUSE | SHOP | REPAIR
+  quantity     Int     @default(0)
+  reorderLevel Int     @default(5) // drives low-stock alerts
+
+  @@unique([productId, location])
+}
+
+model StockMovement {
+  id           String   @id @default(cuid())
+  productId    String
+  type         String // PURCHASE_IN | TRANSFER | SALE | RETURN | DAMAGE | REPAIR_DONE
+  fromLocation String? // WAREHOUSE | SHOP | REPAIR
+  toLocation   String? // WAREHOUSE | SHOP | REPAIR
+  quantity     Int
+  referenceId  String? // orderId / damageReportId
+  performedBy  String // userId
+  createdAt    DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([productId])
+}
+
+model Order {
+  id               String      @id @default(cuid())
+  orderNumber      String      @unique // human-readable, e.g. TW-000001
+  customer         User        @relation(fields: [customerId], references: [id])
+  customerId       String
+  channel          String // ONLINE | STORE
+  status           String      @default("PENDING") // PENDING | PAID | DISPATCHED | DELIVERED | CANCELLED
+  deliveryMethod   String      @default("STANDARD") // STANDARD | EXPRESS | PICKUP
+  deliveryFeeCents Int         @default(0)
+  courier          Courier?    @relation(fields: [courierId], references: [id])
+  courierId        String? // assigned at dispatch (not required for PICKUP)
+  totalCents       Int // items subtotal + deliveryFeeCents
+  paymentMethod    String // COD | ONLINE
+  paymentConfirmed Boolean     @default(false)
+  shippingAddress  String?
+  cancelledBy      String? // role of whoever cancelled: CUSTOMER | SHOPKEEPER | OWNER (null until cancelled)
+  cancelReason     String? // optional free-text reason captured at cancel time
+  items            OrderItem[]
+  createdAt        DateTime    @default(now())
+
+  @@index([createdAt])
+  @@index([status])
+}
+
+model Courier {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  email     String?
+  active    Boolean  @default(true) // inactive couriers can't be assigned to new dispatches
+  orders    Order[]
+  createdAt DateTime @default(now())
+}
+
+model OrderItem {
+  id             String @id @default(cuid())
+  order          Order  @relation(fields: [orderId], references: [id])
+  orderId        String
+  productId      String
+  quantity       Int
+  unitPriceCents Int // price snapshot at purchase time
+  color          String? // chosen colourway at purchase time (null if not specified)
+}
+
+model DamageReport {
+  id          String   @id @default(cuid())
+  productId   String
+  quantity    Int
+  description String
+  status      String   @default("REPORTED") // REPORTED | IN_REPAIR | REPAIRED | SCRAPPED
+  reportedBy  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// Customer-raised demand for a watch that is out of stock in the SHOP.
+// type is decided server-side at creation: PREBOOK if the WAREHOUSE has stock
+// (it can be pulled to the shop), otherwise REQUEST (interest only — no promise).
+model StockRequest {
+  id         String   @id @default(cuid())
+  productId  String
+  customerId String
+  quantity   Int      @default(1)
+  type       String // REQUEST | PREBOOK
+  status     String   @default("OPEN") // OPEN | FULFILLED | DECLINED | CANCELLED
+  note       String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([status])
+}
+
+// A report a staff member sends to the owner. Stores a FROZEN JSON snapshot of the
+// detailed activity for the period [periodStart, periodEnd] (each send covers everything
+// since that sender's previous report). Owner reads them back from the archive.
+model Report {
+  id          String   @id @default(cuid())
+  kind        String // SHOPKEEPER | WAREHOUSE
+  senderId    String
+  senderName  String // snapshot of who sent it
+  senderRole  String // snapshot (SHOPKEEPER | WAREHOUSE_MANAGER | OWNER)
+  title       String // e.g. "Jun 2026 report (1–10 Jun)"
+  periodStart DateTime
+  periodEnd   DateTime
+  data        Json // frozen detailed snapshot (sales / stock activity)
+  createdAt   DateTime @default(now()) // = sent date
+
+  @@index([createdAt])
+  @@index([senderId])
+}
+
+// Internal restock ask: the shopkeeper/owner requests the WAREHOUSE push stock to the
+// SHOP when it's low / out of stock. The warehouse manager/owner approves & sends
+// (a guarded WAREHOUSE→SHOP transfer of `movedQty`) or declines. This is the supply
+// side of StockRequest above (which is customer demand) — kept as a separate model.
+model RestockRequest {
+  id          String   @id @default(cuid())
+  productId   String
+  quantity    Int      @default(1) // units the shop is asking for
+  status      String   @default("OPEN") // OPEN | FULFILLED | DECLINED | CANCELLED
+  note        String?
+  requestedBy String // shopkeeper/owner userId who raised it
+  resolvedBy  String? // warehouse manager/owner who actioned it
+  movedQty    Int? // units actually sent on fulfil (may be < requested)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+}
+
+// A customer's star rating (1–5) + optional comment for a watch they have received.
+// Eligibility is enforced in review.service: the customer must have a DELIVERED order
+// that contains the product. One review per customer per product — re-submitting
+// updates the existing row (see the @@unique below).
+model Review {
+  id         String   @id @default(cuid())
+  productId  String
+  customerId String
+  rating     Int // 1..5
+  comment    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([productId, customerId])
+  @@index([productId])
+}
