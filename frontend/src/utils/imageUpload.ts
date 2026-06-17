@@ -1,6 +1,7 @@
-// Turn a chosen / dropped / pasted image File into a compressed JPEG data URL.
-// We downscale to a sane max dimension and re-encode so the stored string stays
-// small (no separate file storage needed — it lives in the product's imageUrl).
+// Turn a chosen / dropped / pasted image File into a compressed JPEG, then upload it to
+// Cloudinary (via our API) and return the hosted URL stored on the product/colour.
+
+import { api } from '../services/api';
 
 const MAX_DIM = 1280;
 const QUALITY = 0.82;
@@ -48,4 +49,19 @@ export async function fileToCompressedDataUrl(
   ctx.fillRect(0, 0, width, height);
   ctx.drawImage(img, 0, 0, width, height);
   return canvas.toDataURL('image/jpeg', quality);
+}
+
+// Compress the chosen image and upload it to Cloudinary (staff-only API route). Returns the
+// hosted https URL to store on the product / colour variant.
+export async function uploadImage(file: File): Promise<string> {
+  const dataUrl = await fileToCompressedDataUrl(file);
+  const { data } = await api.post<{ url: string }>('/uploads/image', { image: dataUrl });
+  return data.url;
+}
+
+// Customer-facing: upload an EasyPaisa payment screenshot at checkout (any signed-in user).
+export async function uploadPaymentProof(file: File): Promise<string> {
+  const dataUrl = await fileToCompressedDataUrl(file);
+  const { data } = await api.post<{ url: string }>('/uploads/payment-proof', { image: dataUrl });
+  return data.url;
 }

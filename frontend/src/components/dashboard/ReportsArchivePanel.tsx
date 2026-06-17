@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FullReport, SentReportSummary } from '../../types';
 import { deleteSentReport, getSentReport, getSentReports } from '../../services/reportService';
 import { downloadReport } from '../../utils/report';
+import { formatDate, formatDateTime } from '../../utils/format';
 import { useToast } from '../../contexts/ToastContext';
 import { apiErrorMessage } from '../../utils/apiError';
 import { ReportDetail } from './ReportDetail';
@@ -42,8 +43,10 @@ export function ReportsArchivePanel() {
       setOpenId(null);
       return;
     }
-    await load(id);
-    setOpenId(id);
+    // Only expand if the snapshot actually loaded — otherwise the row would show
+    // "Hide" over an empty panel and a re-click would collapse instead of retrying.
+    const r = await load(id);
+    if (r) setOpenId(id);
   }
 
   async function download(id: string) {
@@ -79,8 +82,6 @@ export function ReportsArchivePanel() {
     );
   }
 
-  const fmt = (iso: string) => new Date(iso).toLocaleDateString();
-
   return (
     <div className="space-y-3">
       <p className="text-sm text-gray-500">
@@ -102,7 +103,7 @@ export function ReportsArchivePanel() {
               </p>
               <p className="text-xs text-gray-500">
                 from <b>{r.senderName}</b> ({r.senderRole.replace('_', ' ')}) · covers{' '}
-                {fmt(r.periodStart)} – {fmt(r.periodEnd)} · sent {new Date(r.createdAt).toLocaleString()}
+                {formatDate(r.periodStart)} – {formatDate(r.periodEnd)} · sent {formatDateTime(r.createdAt)}
               </p>
             </div>
             <div className="flex items-center gap-2">

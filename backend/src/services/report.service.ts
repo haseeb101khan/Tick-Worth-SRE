@@ -33,6 +33,21 @@ function reportTitle(start: Date, end: Date) {
   return `${month} ${year} report (${range})`;
 }
 
+// Look up display names ("Brand Model") for a set of product ids in one query.
+async function productNamesById(ids: string[]) {
+  const products = await prisma.product.findMany({ where: { id: { in: ids } } });
+  return new Map(products.map((p) => [p.id, `${p.brand} ${p.name}`]));
+}
+
+// Count orders by status, with every known status pre-seeded to 0.
+function tallyStatuses(orders: { status: string }[]) {
+  const counts = Object.fromEntries(ORDER_STATUSES.map((s) => [s, 0])) as Record<OrderStatus, number>;
+  for (const o of orders) {
+    if (o.status in counts) counts[o.status as OrderStatus] += 1;
+  }
+  return counts;
+}
+
 // ── Owner live views (revenue is owner-only; order-status is order-admin) ────────────────
 
 /**
@@ -50,13 +65,7 @@ export async function orderStatusReport({ year, month }: MonthlyReportInput) {
     orderBy: { createdAt: 'desc' },
   });
 
-  const statusCounts = Object.fromEntries(ORDER_STATUSES.map((s) => [s, 0])) as Record<
-    OrderStatus,
-    number
-  >;
-  for (const o of orders) {
-    if (o.status in statusCounts) statusCounts[o.status as OrderStatus] += 1;
-  }
+  const statusCounts = tallyStatuses(orders);
 
   const rows = orders.map((o) => ({
     id: o.id,
@@ -88,7 +97,10 @@ export async function monthlyReport({ year, month }: MonthlyReportInput) {
     include: { items: true },
   });
 
+  // totalCents includes the delivery fee, so track delivery separately. The figures then
+  // reconcile: totalRevenueCents = (sum of product line revenue) + deliveryRevenueCents.
   const totalRevenueCents = orders.reduce((sum, o) => sum + o.totalCents, 0);
+  const deliveryRevenueCents = orders.reduce((sum, o) => sum + o.deliveryFeeCents, 0);
 
   // Top products + per-day revenue, aggregated from OrderItem price snapshots.
   const byProduct = new Map<string, { quantity: number; revenueCents: number }>();
@@ -104,10 +116,7 @@ export async function monthlyReport({ year, month }: MonthlyReportInput) {
     }
   }
 
-  const products = await prisma.product.findMany({
-    where: { id: { in: [...byProduct.keys()] } },
-  });
-  const nameById = new Map(products.map((p) => [p.id, `${p.brand} ${p.name}`]));
+  const nameById = await productNamesById([...byProduct.keys()]);
 
   const topProducts = [...byProduct.entries()]
     .map(([productId, v]) => ({ productId, name: nameById.get(productId) ?? productId, ...v }))
@@ -118,7 +127,7 @@ export async function monthlyReport({ year, month }: MonthlyReportInput) {
     .map(([day, revenueCents]) => ({ day, revenueCents }))
     .sort((a, b) => a.day - b.day);
 
-  return { year, month, orderCount: orders.length, totalRevenueCents, topProducts, dailyRevenue };
+  return { year, month, orderCount: orders.length, totalRevenueCents, deliveryRevenueCents, topProducts, dailyRevenue };
 }
 
 // ── Persisted reports (snapshot + archive) ──────────────────────────────────────────────
@@ -129,9 +138,12 @@ function kindForRole(role: string) {
 
 /** Each report covers everything since the sender's previous report (gap-free). The very
  *  first one is anchored to the start of the current month. */
-async function computePeriod(senderId: string) {
+async function computePeriod(kind: string) {
+  // Anchor the gap-free timeline per report KIND (not per sender): all SHOPKEEPER reports share
+  // one continuous timeline, as do all WAREHOUSE reports. This stops two staff of the same role
+  // each covering — and the owner double-counting — the same orders/movements.
   const last = await prisma.report.findFirst({
-    where: { senderId },
+    where: { kind },
     orderBy: { periodEnd: 'desc' },
   });
   const now = new Date();
@@ -148,30 +160,33 @@ async function buildShopkeeperData(start: Date, end: Date) {
   });
 
   const productIds = [...new Set(orders.flatMap((o) => o.items.map((i) => i.productId)))];
-  const products = await prisma.product.findMany({ where: { id: { in: productIds } } });
-  const nameById = new Map(products.map((p) => [p.id, `${p.brand} ${p.name}`]));
+  const nameById = await productNamesById(productIds);
 
-  const statusCounts = Object.fromEntries(ORDER_STATUSES.map((s) => [s, 0])) as Record<OrderStatus, number>;
+  const statusCounts = tallyStatuses(orders);
   let revenueCents = 0;
   const sales = [];
   const cancellations = [];
 
   for (const o of orders) {
-    if (o.status in statusCounts) statusCounts[o.status as OrderStatus] += 1;
-    if (REVENUE_STATUSES.includes(o.status)) revenueCents += o.totalCents;
-    for (const it of o.items) {
-      sales.push({
-        date: o.createdAt.toISOString(),
-        orderNumber: o.orderNumber,
-        productName: nameById.get(it.productId) ?? it.productId,
-        color: it.color ?? null,
-        quantity: it.quantity,
-        unitPriceCents: it.unitPriceCents,
-        lineTotalCents: it.unitPriceCents * it.quantity,
-        customerName: o.customer?.name ?? 'Customer',
-        customerEmail: o.customer?.email ?? '',
-        status: o.status,
-      });
+    const isSale = REVENUE_STATUSES.includes(o.status);
+    if (isSale) revenueCents += o.totalCents;
+    // "Items sold" must reflect actual sales — skip pending/cancelled orders, whose items
+    // were never sold (cancellations are listed separately below).
+    if (isSale) {
+      for (const it of o.items) {
+        sales.push({
+          date: o.createdAt.toISOString(),
+          orderNumber: o.orderNumber,
+          productName: nameById.get(it.productId) ?? it.productId,
+          color: it.color ?? null,
+          quantity: it.quantity,
+          unitPriceCents: it.unitPriceCents,
+          lineTotalCents: it.unitPriceCents * it.quantity,
+          customerName: o.customer?.name ?? 'Customer',
+          customerEmail: o.customer?.email ?? '',
+          status: o.status,
+        });
+      }
     }
     if (o.status === 'CANCELLED') {
       cancellations.push({
@@ -196,8 +211,10 @@ async function buildWarehouseData(start: Date, end: Date) {
       where: { OR: [{ createdAt: inRange }, { updatedAt: inRange }] },
       orderBy: { createdAt: 'asc' },
     }),
+    // Scope to requests RAISED this period so each lands in exactly one report (counted once,
+    // with an in-window requestedAt); a request's resolution shows in the movement ledger below.
     prisma.restockRequest.findMany({
-      where: { OR: [{ createdAt: inRange }, { updatedAt: inRange }] },
+      where: { createdAt: inRange },
       orderBy: { createdAt: 'asc' },
     }),
   ]);
@@ -209,8 +226,7 @@ async function buildWarehouseData(start: Date, end: Date) {
       ...restocks.map((r) => r.productId),
     ]),
   ];
-  const products = await prisma.product.findMany({ where: { id: { in: productIds } } });
-  const nameById = new Map(products.map((p) => [p.id, `${p.brand} ${p.name}`]));
+  const nameById = await productNamesById(productIds);
   const name = (id: string) => nameById.get(id) ?? id;
   const within = (d: Date) => d >= start && d <= end;
 
@@ -284,7 +300,7 @@ async function buildDataFor(kind: string, start: Date, end: Date) {
 /** Build the report a staff member would send right now — WITHOUT persisting it (preview). */
 export async function previewReport(user: { id: string; role: string }) {
   const kind = kindForRole(user.role);
-  const { periodStart, periodEnd } = await computePeriod(user.id);
+  const { periodStart, periodEnd } = await computePeriod(kind);
   const data = await buildDataFor(kind, periodStart, periodEnd);
   return { kind, title: reportTitle(periodStart, periodEnd), periodStart, periodEnd, data };
 }
@@ -292,7 +308,7 @@ export async function previewReport(user: { id: string; role: string }) {
 /** Persist a frozen snapshot for the pending period and notify the owner(s). */
 export async function createReport(user: { id: string; role: string }) {
   const kind = kindForRole(user.role);
-  const { periodStart, periodEnd } = await computePeriod(user.id);
+  const { periodStart, periodEnd } = await computePeriod(kind);
   const data = await buildDataFor(kind, periodStart, periodEnd);
   const title = reportTitle(periodStart, periodEnd);
   const sender = await prisma.user.findUnique({ where: { id: user.id } });
@@ -324,35 +340,22 @@ export async function createReport(user: { id: string; role: string }) {
   return report;
 }
 
-// Small at-a-glance counts for the archive list, derived from the stored snapshot.
-function summarize(kind: string, data: Prisma.JsonValue) {
-  const d = (data ?? {}) as Record<string, unknown>;
-  if (kind === 'WAREHOUSE') {
-    const s = (d.summary ?? {}) as Record<string, number>;
-    return { received: s.received ?? 0, sentToRepair: s.sentToRepair ?? 0, scrapped: s.scrapped ?? 0 };
-  }
-  const sales = (d.sales ?? []) as { quantity?: number }[];
-  return {
-    orders: (d.totalOrders as number) ?? 0,
-    revenueCents: (d.revenueCents as number) ?? 0,
-    itemsSold: sales.reduce((n, x) => n + (x.quantity ?? 0), 0),
-  };
-}
-
-/** Owner archive list — metadata + light summary only (no heavy snapshot). */
+/** Owner archive list — metadata only. Selects every column EXCEPT the heavy `data` snapshot,
+ *  which is loaded on demand by getSentReport when a row is expanded or downloaded. */
 export async function listSentReports() {
-  const reports = await prisma.report.findMany({ orderBy: { createdAt: 'desc' } });
-  return reports.map((r) => ({
-    id: r.id,
-    kind: r.kind,
-    senderName: r.senderName,
-    senderRole: r.senderRole,
-    title: r.title,
-    periodStart: r.periodStart,
-    periodEnd: r.periodEnd,
-    createdAt: r.createdAt,
-    summary: summarize(r.kind, r.data),
-  }));
+  return prisma.report.findMany({
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true,
+      kind: true,
+      senderName: true,
+      senderRole: true,
+      title: true,
+      periodStart: true,
+      periodEnd: true,
+      createdAt: true,
+    },
+  });
 }
 
 /** Owner archive detail — the full frozen snapshot. */

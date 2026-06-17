@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as productService from '../services/product.service';
-import { createProductSchema, updateProductSchema } from '../utils/validators';
+import { createProductSchema, updateProductSchema, setVariantsSchema } from '../utils/validators';
 
 export async function list(req: Request, res: Response) {
   const { brand, category, search } = req.query;
@@ -31,4 +31,11 @@ export async function update(req: Request, res: Response) {
     imageUrl: input.imageUrl === '' ? null : input.imageUrl,
   });
   res.json(product);
+}
+
+// Staff-only: replace a product's colour variants (the catalog colour manager).
+export async function setVariants(req: Request, res: Response) {
+  const { variants } = setVariantsSchema.parse(req.body);
+  const result = await productService.setVariants(req.params.id, variants);
+  res.json(result);
 }

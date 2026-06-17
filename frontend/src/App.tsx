@@ -2,11 +2,13 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-route
 import { ToastProvider } from './contexts/ToastContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
+import { WhatsAppFab } from './components/WhatsAppFab';
 import { RequireRole, STAFF_ROLES } from './components/ProtectedRoute';
 import { HomePage } from './pages/HomePage';
 import { ProductsPage } from './pages/ProductsPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { BrandPage } from './pages/BrandPage';
+import { VerifyEmailPage } from './pages/VerifyEmailPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { StaffLoginPage } from './pages/StaffLoginPage';
@@ -28,6 +30,7 @@ function StorefrontLayout() {
           <Route path="/shop" element={<ProductsPage />} />
           <Route path="/shop/:id" element={<ProductDetailPage />} />
           <Route path="/brand/:slug" element={<BrandPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/cart" element={<CartPage />} />
@@ -51,6 +54,7 @@ function StorefrontLayout() {
         </Routes>
       </div>
       {!hideFooter && <Footer />}
+      <WhatsAppFab />
     </div>
   );
 }

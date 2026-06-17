@@ -1,10 +1,10 @@
 import { ClipboardEvent, DragEvent, FormEvent, useMemo, useState } from 'react';
 import { Product } from '../../types';
-import { createProduct, updateProduct } from '../../services/productService';
+import { createProduct, getProduct, setProductVariants, updateProduct } from '../../services/productService';
 import { useToast } from '../../contexts/ToastContext';
 import { apiErrorMessage } from '../../utils/apiError';
 import { formatMoney, stockAt } from '../../utils/format';
-import { fileToCompressedDataUrl } from '../../utils/imageUpload';
+import { uploadImage } from '../../utils/imageUpload';
 import { WatchImage } from '../WatchImage';
 
 const EMPTY = { name: '', brand: '', category: '', description: '', price: '', imageUrl: '' };
@@ -23,11 +23,15 @@ export function CatalogPanel({ products, onChange }: { products: Product[]; onCh
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
 
+  // Colour variants for the product being edited (loaded on edit; saved separately).
+  const [colors, setColors] = useState<{ color: string; imageUrl: string }[]>([]);
+  const [colorBusy, setColorBusy] = useState(false);
+  const [uploadingColorIdx, setUploadingColorIdx] = useState<number | null>(null);
+
   const isEditing = editingId !== null;
   const set = (patch: Partial<typeof EMPTY>) => setForm((f) => ({ ...f, ...patch }));
 
-  // Compress an uploaded/dropped/pasted image to a data URL and store it as the
-  // product image — no separate file hosting needed.
+  // Compress the image, upload it to Cloudinary via our API, and store the returned URL.
   async function handleImageFile(file: File | null | undefined) {
     if (!file) return;
     if (!file.type.startsWith('image/')) {
@@ -36,9 +40,9 @@ export function CatalogPanel({ products, onChange }: { products: Product[]; onCh
     }
     setUploading(true);
     try {
-      set({ imageUrl: await fileToCompressedDataUrl(file) });
-    } catch {
-      toast.error('Could not read that image — try another file');
+      set({ imageUrl: await uploadImage(file) });
+    } catch (err) {
+      toast.error(apiErrorMessage(err));
     } finally {
       setUploading(false);
     }
@@ -67,9 +71,10 @@ export function CatalogPanel({ products, onChange }: { products: Product[]; onCh
   function resetForm() {
     setEditingId(null);
     setForm(EMPTY);
+    setColors([]);
   }
 
-  function startEdit(p: Product) {
+  async function startEdit(p: Product) {
     setEditingId(p.id);
     setForm({
       name: p.name,
@@ -79,6 +84,66 @@ export function CatalogPanel({ products, onChange }: { products: Product[]; onCh
       price: (p.priceCents / 100).toString(),
       imageUrl: p.imageUrl ?? '',
     });
+    // The catalogue list doesn't include variants, so fetch the full product to load its colours.
+    setColors([]);
+    try {
+      const full = await getProduct(p.id);
+      setColors((full.variants ?? []).map((v) => ({ color: v.color, imageUrl: v.imageUrl })));
+    } catch {
+      // leave colours empty if the fetch fails
+    }
+  }
+
+  function addColor() {
+    setColors((c) => [...c, { color: '', imageUrl: '' }]);
+  }
+
+  function removeColor(idx: number) {
+    setColors((c) => c.filter((_, i) => i !== idx));
+  }
+
+  function setColorField(idx: number, patch: Partial<{ color: string; imageUrl: string }>) {
+    setColors((c) => c.map((v, i) => (i === idx ? { ...v, ...patch } : v)));
+  }
+
+  async function handleColorImage(idx: number, file: File | null | undefined) {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please choose an image file');
+      return;
+    }
+    setUploadingColorIdx(idx);
+    try {
+      setColorField(idx, { imageUrl: await uploadImage(file) });
+    } catch (err) {
+      toast.error(apiErrorMessage(err));
+    } finally {
+      setUploadingColorIdx(null);
+    }
+  }
+
+  async function saveColors() {
+    if (!editingId) return;
+    // Drop fully-empty rows; every remaining colour needs both a name and an image.
+    const clean = colors.filter((c) => c.color.trim() || c.imageUrl);
+    if (clean.some((c) => !c.color.trim() || !c.imageUrl)) {
+      toast.error('Each colour needs a name and an image');
+      return;
+    }
+    setColorBusy(true);
+    try {
+      const saved = await setProductVariants(
+        editingId,
+        clean.map((c) => ({ color: c.color.trim(), imageUrl: c.imageUrl })),
+      );
+      setColors(saved.map((v) => ({ color: v.color, imageUrl: v.imageUrl })));
+      toast.success('Colours updated');
+      onChange();
+    } catch (err) {
+      toast.error(apiErrorMessage(err));
+    } finally {
+      setColorBusy(false);
+    }
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -116,7 +181,8 @@ export function CatalogPanel({ products, onChange }: { products: Product[]; onCh
 
   return (
     <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
-      {/* Add / edit form */}
+      {/* Add / edit form + colour manager */}
+      <div className="space-y-6">
       <form onSubmit={handleSubmit} className="h-fit space-y-4 rounded-lg border bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold">{isEditing ? 'Edit product' : 'Add product'}</h3>
@@ -214,11 +280,11 @@ export function CatalogPanel({ products, onChange }: { products: Product[]; onCh
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium">Price (USD)</label>
+            <label className="mb-1 block text-sm font-medium">Price (PKR)</label>
             <input
               type="number"
               min={1}
-              step="0.01"
+              step="1"
               required
               value={form.price}
               onChange={(e) => set({ price: e.target.value })}
@@ -250,6 +316,73 @@ export function CatalogPanel({ products, onChange }: { products: Product[]; onCh
           </p>
         )}
       </form>
+
+      {/* Colour manager — only when editing (colours attach to an existing product) */}
+      {isEditing ? (
+        <div className="space-y-3 rounded-lg border bg-white p-5 shadow-sm">
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold">Colours</h3>
+            <button type="button" onClick={addColor} className="text-xs font-medium text-gray-900 hover:underline">
+              + Add colour
+            </button>
+          </div>
+          {colors.length === 0 && (
+            <p className="text-xs text-gray-500">
+              No colours yet. Add one or more colourways, each with its own photo — these drive the
+              colour picker on the product page.
+            </p>
+          )}
+          <div className="space-y-3">
+            {colors.map((c, i) => (
+              <div key={i} className="flex items-center gap-3 rounded border p-2">
+                <WatchImage
+                  name={c.color || 'Colour'}
+                  brand={form.brand || 'Brand'}
+                  imageUrl={c.imageUrl}
+                  width={120}
+                  className="aspect-square w-14 shrink-0 rounded"
+                />
+                <div className="flex-1 space-y-1.5">
+                  <input
+                    value={c.color}
+                    onChange={(e) => setColorField(i, { color: e.target.value })}
+                    placeholder="Colour name (e.g. Rose Gold)"
+                    className="w-full rounded border px-2 py-1 text-sm"
+                  />
+                  <div className="flex items-center gap-2">
+                    <label className="cursor-pointer rounded bg-gray-900 px-2 py-1 text-xs font-medium text-white hover:bg-gray-700">
+                      {uploadingColorIdx === i ? 'Uploading…' : c.imageUrl ? 'Replace image' : 'Upload image'}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        title="Colour image"
+                        onChange={(e) => handleColorImage(i, e.target.files?.[0])}
+                      />
+                    </label>
+                    <button type="button" onClick={() => removeColor(i)} className="text-xs text-red-600 hover:underline">
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={saveColors}
+            disabled={colorBusy}
+            className="rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50"
+          >
+            {colorBusy ? 'Saving…' : 'Save colours'}
+          </button>
+        </div>
+      ) : (
+        <p className="rounded-lg border bg-white p-5 text-xs text-gray-500 shadow-sm">
+          Save a product first, then edit it to add colour options.
+        </p>
+      )}
+      </div>
 
       {/* Catalogue list */}
       <div className="overflow-x-auto rounded-lg border bg-white shadow-sm">

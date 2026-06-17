@@ -19,3 +19,4 @@ productRoutes.post('/:id/reviews', authMiddleware, requireRole('CUSTOMER'), asyn
 // Staff-only management
 productRoutes.post('/', authMiddleware, requireStaff, asyncHandler(productController.create));
 productRoutes.patch('/:id', authMiddleware, requireStaff, asyncHandler(productController.update));
+productRoutes.put('/:id/variants', authMiddleware, requireStaff, asyncHandler(productController.setVariants));

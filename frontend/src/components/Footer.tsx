@@ -1,6 +1,7 @@
 import { FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useToast } from '../contexts/ToastContext';
+import { CONTACT } from '../utils/contact';
 
 export function Footer() {
   const toast = useToast();
@@ -62,9 +63,37 @@ export function Footer() {
           <li className="text-ivory/60">Worldwide delivery</li>
         </FooterCol>
 
-        <FooterCol title="Service">
-          <li className="text-ivory/60">+1 (800) 000-0000</li>
-          <li className="text-ivory/60">concierge@tickworth.test</li>
+        <FooterCol title="Contact">
+          <li>
+            <a
+              href={CONTACT.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-ivory/60 transition-colors hover:text-gold"
+            >
+              WhatsApp · {CONTACT.phoneDisplay}
+            </a>
+          </li>
+          <li>
+            <a
+              href={CONTACT.instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-ivory/60 transition-colors hover:text-gold"
+            >
+              Instagram · {CONTACT.instagramHandle}
+            </a>
+          </li>
+          <li>
+            <a
+              href={CONTACT.facebookUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-ivory/60 transition-colors hover:text-gold"
+            >
+              Facebook · {CONTACT.facebookHandle}
+            </a>
+          </li>
           <li>
             <Link to="/staff/login" className="text-ivory/40 transition-colors hover:text-gold">
               Staff portal

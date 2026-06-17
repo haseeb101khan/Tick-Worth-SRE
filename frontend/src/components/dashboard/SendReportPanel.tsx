@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FullReport, ReportPreview } from '../../types';
 import { getMyReports, getReportPreview, sendReportToOwner } from '../../services/reportService';
 import { downloadReport } from '../../utils/report';
+import { formatDate, formatDateTime } from '../../utils/format';
 import { useToast } from '../../contexts/ToastContext';
 import { apiErrorMessage } from '../../utils/apiError';
 import { ReportDetail } from './ReportDetail';
@@ -46,8 +47,6 @@ export function SendReportPanel() {
 
   if (loading) return <p className="text-gray-500">Loading report…</p>;
 
-  const fmt = (iso: string) => new Date(iso).toLocaleDateString();
-
   return (
     <div className="space-y-6">
       <div className="rounded-lg border bg-white p-5 shadow-sm">
@@ -56,7 +55,7 @@ export function SendReportPanel() {
             <h3 className="font-semibold">Report to send</h3>
             {preview && (
               <p className="text-sm text-gray-500">
-                {preview.title} · covers {fmt(preview.periodStart)} – {fmt(preview.periodEnd)}{' '}
+                {preview.title} · covers {formatDate(preview.periodStart)} – {formatDate(preview.periodEnd)}{' '}
                 <span className="text-gray-400">(everything since your last report)</span>
               </p>
             )}
@@ -88,7 +87,7 @@ export function SendReportPanel() {
                 >
                   <span className="font-medium">{r.title}</span>
                   <span className="ml-2 text-xs text-gray-400">
-                    sent {new Date(r.createdAt).toLocaleString()}
+                    sent {formatDateTime(r.createdAt)}
                   </span>
                 </button>
                 <div className="flex items-center gap-2">

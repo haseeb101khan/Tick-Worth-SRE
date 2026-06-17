@@ -44,6 +44,7 @@ export interface Product {
   priceCents: number;
   imageUrl?: string;
   images?: string[]; // legacy gallery shots (superseded by variants)
+  specs?: string[]; // spec lines from the product sheet (detail-page table)
   variants?: ProductVariant[]; // colour options for this model
   stock?: Stock[];
   ratingAverage?: number | null; // mean star rating (null if no reviews yet)
@@ -108,6 +109,9 @@ export interface Order {
   totalCents: number;
   paymentMethod: string;
   paymentConfirmed: boolean;
+  paymentProofUrl?: string | null;
+  paymentSenderName?: string | null;
+  paymentReference?: string | null;
   shippingAddress?: string;
   cancelledBy?: string | null; // role of canceller: CUSTOMER | SHOPKEEPER | OWNER
   cancelReason?: string | null;
@@ -118,8 +122,9 @@ export interface Order {
 
 // Customer-facing delivery options (labels/fees mirror the server config).
 export const DELIVERY_OPTIONS: { value: DeliveryMethod; label: string; feeCents: number; blurb: string }[] = [
-  { value: 'STANDARD', label: 'Standard delivery', feeCents: 0, blurb: 'Free · 3–5 business days' },
-  { value: 'EXPRESS', label: 'Express delivery', feeCents: 5000, blurb: 'Next business day' },
+  // feeCents is paisa (PKR minor units) and MUST match the backend DELIVERY_OPTIONS.
+  { value: 'STANDARD', label: 'Delivery', feeCents: 25000, blurb: 'Rs 250 · 3–5 business days' },
+  { value: 'EXPRESS', label: 'Express delivery', feeCents: 50000, blurb: 'Rs 500 · next business day' },
   { value: 'PICKUP', label: 'Collect in store', feeCents: 0, blurb: 'Free · ready when paid' },
 ];
 
@@ -170,7 +175,8 @@ export interface MonthlyReport {
   year: number;
   month: number;
   orderCount: number;
-  totalRevenueCents: number;
+  totalRevenueCents: number; // gross — includes delivery fees
+  deliveryRevenueCents: number; // of which this much is delivery; product revenue = total − this
   topProducts: { productId: string; name: string; quantity: number; revenueCents: number }[];
   dailyRevenue: { day: number; revenueCents: number }[];
 }
@@ -282,7 +288,6 @@ export interface SentReportSummary {
   periodStart: string;
   periodEnd: string;
   createdAt: string;
-  summary: Record<string, number>;
 }
 
 // Order-status report — every order in the month with its current status (no revenue,

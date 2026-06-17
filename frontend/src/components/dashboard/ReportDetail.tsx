@@ -1,10 +1,10 @@
 import { ReactNode } from 'react';
 import { ReportData, ReportKind, ShopkeeperReportData, WarehouseReportData } from '../../types';
-import { formatMoney, orderStatusLabel } from '../../utils/format';
+import { formatDate, formatDateTime, formatMoney, orderStatusLabel } from '../../utils/format';
 import { StatusBadge } from '../StatusBadge';
 
-const d = (iso: string) => new Date(iso).toLocaleDateString();
-const dt = (iso: string) => new Date(iso).toLocaleString();
+const d = formatDate;
+const dt = formatDateTime;
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (

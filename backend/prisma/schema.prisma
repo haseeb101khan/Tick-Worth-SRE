@@ -18,6 +18,10 @@ model User {
   role         String   @default("CUSTOMER") // CUSTOMER | SHOPKEEPER | WAREHOUSE_MANAGER | OWNER
   active       Boolean  @default(true) // owner can deactivate staff; inactive users cannot log in
   createdBy    String? // userId of the owner who provisioned this staff account (null for self-registered customers/seed)
+  // Email verification: self-registered users must confirm their email before they can log in.
+  emailVerified     Boolean   @default(false)
+  verifyToken       String? // one-time token emailed at sign-up (and on resend); looked up with findFirst
+  verifyTokenExpiry DateTime?
   orders       Order[]
   createdAt    DateTime @default(now())
 }
@@ -31,6 +35,7 @@ model Product {
   priceCents  Int // money as integer minor units — NEVER Float
   imageUrl    String? // primary catalogue image (card + detail hero = first colour)
   images      String[] @default([]) // legacy gallery shots (superseded by variants)
+  specs       String[] @default([]) // spec lines from the owner's product sheet (detail-page table)
   stock       Stock[]
   variants    ProductVariant[] // the colour options this model is offered in
   createdAt   DateTime @default(now())
@@ -92,6 +97,11 @@ model Order {
   totalCents       Int // items subtotal + deliveryFeeCents
   paymentMethod    String // COD | ONLINE
   paymentConfirmed Boolean     @default(false)
+  // EasyPaisa online payments: the customer pays the shop's number, then submits a
+  // screenshot + sender details for the shopkeeper to verify before confirming.
+  paymentProofUrl   String? // uploaded screenshot of the EasyPaisa transfer
+  paymentSenderName String? // name on the account the customer paid from
+  paymentReference  String? // EasyPaisa transaction id / sender mobile number
   shippingAddress  String?
   cancelledBy      String? // role of whoever cancelled: CUSTOMER | SHOPKEEPER | OWNER (null until cancelled)
   cancelReason     String? // optional free-text reason captured at cancel time

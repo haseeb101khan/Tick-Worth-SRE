@@ -1,9 +1,18 @@
 import { Product } from '../types';
 
-// Money is stored as integer cents on the backend. Format for display only.
+// Money is stored as integer minor units (paisa) on the backend. Format for display only —
+// Pakistani Rupee, shown as whole rupees (Rs) since paisa aren't used in practice.
 export function formatMoney(cents: number): string {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
+  return new Intl.NumberFormat('en-PK', {
+    style: 'currency',
+    currency: 'PKR',
+    maximumFractionDigits: 0,
+  }).format(cents / 100);
 }
+
+// ISO timestamp → locale date / date-time. Shared so report views and lists format alike.
+export const formatDate = (iso: string): string => new Date(iso).toLocaleDateString();
+export const formatDateTime = (iso: string): string => new Date(iso).toLocaleString();
 
 const DELIVERY_LABELS: Record<string, string> = {
   STANDARD: 'Standard delivery',

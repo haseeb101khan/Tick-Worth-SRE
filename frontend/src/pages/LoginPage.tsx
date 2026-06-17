@@ -2,6 +2,7 @@ import { FormEvent, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
+import { resendVerification } from '../services/authService';
 import { apiErrorMessage } from '../utils/apiError';
 import { STAFF_ROLES } from '../components/ProtectedRoute';
 import { ctaImage } from '../utils/images';
@@ -14,18 +15,31 @@ export function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
+  const [needsVerify, setNeedsVerify] = useState(false);
 
   async function doLogin(em: string, pw: string) {
     setBusy(true);
+    setNeedsVerify(false);
     try {
       const user = await login(em, pw);
       const from = (location.state as { from?: string } | null)?.from;
       navigate(STAFF_ROLES.includes(user.role) ? '/dashboard' : (from ?? '/'), { replace: true });
       toast.success('Welcome back to Tick Worth.');
     } catch (e) {
-      toast.error(apiErrorMessage(e));
+      const msg = apiErrorMessage(e);
+      if (/verify/i.test(msg)) setNeedsVerify(true);
+      toast.error(msg);
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function handleResend() {
+    try {
+      await resendVerification(email);
+      toast.success('Verification email re-sent — check your inbox');
+    } catch (e) {
+      toast.error(apiErrorMessage(e));
     }
   }
 
@@ -83,24 +97,25 @@ export function LoginPage() {
             </button>
           </form>
 
+          {needsVerify && (
+            <div className="mt-5 border border-gold/40 bg-gold/5 p-4 text-sm">
+              <p className="text-ink">Your email isn't verified yet.</p>
+              <button
+                type="button"
+                onClick={handleResend}
+                className="mt-2 text-[0.7rem] uppercase tracking-wide2 text-gold-dark underline-offset-4 hover:underline"
+              >
+                Resend verification email
+              </button>
+            </div>
+          )}
+
           <p className="mt-6 text-center text-sm text-stone">
             New to Tick Worth?{' '}
             <Link to="/register" className="text-gold-dark hover:underline">
               Create an account
             </Link>
           </p>
-
-          <div className="mt-8 border-t border-ink/10 pt-6 text-center">
-            <p className="eyebrow-muted mb-3">Demo customer · password123</p>
-            <button
-              type="button"
-              disabled={busy}
-              onClick={() => doLogin('customer@tickworth.test', 'password123')}
-              className="text-[0.7rem] uppercase tracking-wide2 text-ink underline-offset-4 hover:text-gold hover:underline"
-            >
-              Enter as a customer
-            </button>
-          </div>
         </div>
       </div>
     </div>

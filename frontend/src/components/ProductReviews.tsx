@@ -55,10 +55,14 @@ export function ProductReviews({ productId }: { productId: string }) {
     }
     setSubmitting(true);
     try {
-      await submitReview(productId, { rating, comment: comment.trim() || undefined });
+      // Mirror the server's normalization (trimmed; empty → null) so the optimistic
+      // state and pre-filled form match what was actually persisted.
+      const trimmed = comment.trim();
+      await submitReview(productId, { rating, comment: trimmed || undefined });
       toast.success(state?.myReview ? 'Your review was updated' : 'Thank you for your review');
       loadSummary();
-      setState((prev) => ({ canReview: true, myReview: { id: prev?.myReview?.id ?? 'me', rating, comment } }));
+      setComment(trimmed);
+      setState((prev) => ({ canReview: true, myReview: { id: prev?.myReview?.id ?? 'me', rating, comment: trimmed || null } }));
     } catch (err) {
       toast.error(apiErrorMessage(err));
     } finally {

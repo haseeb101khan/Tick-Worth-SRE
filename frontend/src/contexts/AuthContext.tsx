@@ -5,7 +5,9 @@ import * as authService from '../services/authService';
 interface AuthContextValue {
   user: User | null;
   login: (email: string, password: string) => Promise<User>;
-  register: (name: string, email: string, password: string) => Promise<User>;
+  // Registration sends a verification email; it does NOT sign the user in.
+  register: (name: string, email: string, password: string) => Promise<{ needsVerification: boolean; email: string }>;
+  verifyEmail: (token: string) => Promise<User>;
   logout: () => void;
 }
 
@@ -31,8 +33,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function register(name: string, email: string, password: string) {
-    const { token, user: u } = await authService.register(name, email, password);
-    persist(token, u);
+    // Returns { needsVerification, email } — the user verifies via the emailed link.
+    return authService.register(name, email, password);
+  }
+
+  async function verifyEmail(token: string) {
+    const { token: jwt, user: u } = await authService.verifyEmail(token);
+    persist(jwt, u);
     return u;
   }
 
@@ -43,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, login, register, verifyEmail, logout }}>{children}</AuthContext.Provider>
   );
 }
 

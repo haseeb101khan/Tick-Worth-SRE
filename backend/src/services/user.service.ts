@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import { prisma } from '../prisma';
 import { BadRequestError, ConflictError, NotFoundError } from '../utils/errors';
 import { CreateStaffInput, UpdateStaffInput } from '../utils/validators';
+import { audit } from '../utils/logger';
 
 // Never leak passwordHash to the client.
 const SAFE_SELECT = {
@@ -29,16 +30,20 @@ export async function createStaff(input: CreateStaffInput, ownerId: string) {
   if (existing) throw new BadRequestError('Email already registered');
 
   const passwordHash = await bcrypt.hash(input.password, 10);
-  return prisma.user.create({
+  const created = await prisma.user.create({
     data: {
       name: input.name,
       email: input.email,
       passwordHash,
       role: input.role,
       createdBy: ownerId,
+      // Owner-provisioned staff are trusted — no email verification step for them.
+      emailVerified: true,
     },
     select: SAFE_SELECT,
   });
+  audit('staff.created', { staffId: created.id, role: created.role, by: ownerId });
+  return created;
 }
 
 /** Owner updates a staff member's role and/or active flag. */

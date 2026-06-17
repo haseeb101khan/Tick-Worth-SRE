@@ -2,11 +2,13 @@ import { prisma } from '../prisma';
 import { BadRequestError, ConflictError, ForbiddenError, NotFoundError } from '../utils/errors';
 import { PlaceOrderInput } from '../utils/validators';
 import { notifyIfLowStock } from './notification.service';
+import { audit } from '../utils/logger';
 
 // Delivery options + their fees (server-side — never trust a fee from the client).
+// Fees are in paisa (PKR minor units). EXPRESS default = Rs 500 — adjust to your real rate.
 export const DELIVERY_OPTIONS: Record<string, { feeCents: number; label: string }> = {
-  STANDARD: { feeCents: 0, label: 'Standard delivery (3–5 days)' },
-  EXPRESS: { feeCents: 5000, label: 'Express delivery (next day)' },
+  STANDARD: { feeCents: 25000, label: 'Delivery (Rs 250)' }, // flat Rs 250 delivery charge
+  EXPRESS: { feeCents: 50000, label: 'Express delivery (next day)' },
   PICKUP: { feeCents: 0, label: 'Collect in store' },
 };
 
@@ -70,7 +72,13 @@ export async function placeOrder(customerId: string, input: PlaceOrderInput) {
         deliveryFeeCents,
         shippingAddress: input.shippingAddress,
         status: isStore ? 'DELIVERED' : 'PENDING',
-        paymentConfirmed: isStore || input.paymentMethod === 'ONLINE',
+        // Online (EasyPaisa) payments are NOT auto-confirmed — the shopkeeper verifies
+        // the uploaded screenshot, then marks the order PAID. Only in-store sales are
+        // confirmed on the spot.
+        paymentConfirmed: isStore,
+        paymentProofUrl: input.paymentProofUrl,
+        paymentSenderName: input.paymentSenderName,
+        paymentReference: input.paymentReference,
         totalCents,
         items: {
           create: input.items.map((i) => ({
@@ -151,6 +159,7 @@ export async function updateOrderStatus(
   });
   if (res.count === 0) throw new ConflictError('Order status changed concurrently — retry');
 
+  audit('order.status_changed', { orderId, from: order.status, to: status });
   return prisma.order.findUnique({ where: { id: orderId }, include: ORDER_INCLUDE });
 }
 

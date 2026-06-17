@@ -46,7 +46,19 @@ export async function getProduct(id: string) {
     include: { stock: true, variants: { orderBy: { position: 'asc' } } },
   });
   if (!product) throw new NotFoundError('Product not found');
-  return product;
+
+  // Attach the same rating summary listProducts exposes, so the detail page has it without a
+  // second request and product payloads keep a consistent shape across both reads.
+  const agg = await prisma.review.aggregate({
+    where: { productId: id },
+    _avg: { rating: true },
+    _count: { _all: true },
+  });
+  return {
+    ...product,
+    ratingAverage: agg._avg.rating != null ? Math.round(agg._avg.rating * 10) / 10 : null,
+    ratingCount: agg._count._all,
+  };
 }
 
 export async function createProduct(data: {
@@ -70,6 +82,26 @@ export async function createProduct(data: {
       },
     },
     include: { stock: true },
+  });
+}
+
+// Replace a product's full set of colour variants in one shot (the catalog colour manager edits
+// the whole list at once). Array order becomes display position; 0 is the primary colour.
+export async function setVariants(
+  productId: string,
+  variants: { color: string; imageUrl: string }[],
+) {
+  return prisma.$transaction(async (tx) => {
+    const product = await tx.product.findUnique({ where: { id: productId }, select: { id: true } });
+    if (!product) throw new NotFoundError('Product not found');
+
+    await tx.productVariant.deleteMany({ where: { productId } });
+    if (variants.length > 0) {
+      await tx.productVariant.createMany({
+        data: variants.map((v, i) => ({ productId, color: v.color, imageUrl: v.imageUrl, position: i })),
+      });
+    }
+    return tx.productVariant.findMany({ where: { productId }, orderBy: { position: 'asc' } });
   });
 }
 

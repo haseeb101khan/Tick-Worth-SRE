@@ -29,6 +29,7 @@ export function ProductDetailPage() {
     if (!id) return;
     setLoading(true);
     setActiveImage(0);
+    setQty(1); // reset, otherwise a qty chosen on a previous product leaks across navigation
     getProduct(id)
       .then(setProduct)
       .catch((e) => toast.error(apiErrorMessage(e)))
@@ -69,15 +70,21 @@ export function ProductDetailPage() {
     // synthetic single-image "Standard" fallback).
     const chosenColor = product.variants && product.variants.length > 0 ? activeColor?.color : undefined;
     const ok = addItem(product, qty, chosenColor);
-    if (ok) toast.success(`${product.name} added to your bag`);
+    if (ok) toast.success(`${product.name}${chosenColor ? ` · ${chosenColor}` : ''} added to your bag`);
     else toast.error(`That's the most of this piece we can add to your bag right now`);
   }
 
-  const specs: [string, string][] = [
+  const hasColours = (product.variants?.length ?? 0) > 0;
+  // Key attributes shown at the top of the spec table. The Colour row reflects the
+  // currently selected swatch (live), and Available colours lists them all.
+  const keyRows: [string, string][] = [
     ['Maison', product.brand],
     ['Discipline', product.category],
+    ...(hasColours ? ([['Colour', activeColor?.color ?? '—']] as [string, string][]) : []),
+    ...(variants.length > 1
+      ? ([['Available colours', variants.map((v) => v.color).join(', ')]] as [string, string][])
+      : []),
     ['Reference', product.id.slice(-8).toUpperCase()],
-    ['Colourways', `${variants.length} available`],
     // Customers see only in/out of stock; staff see the exact boutique count.
     ['Availability', available > 0 ? (isStaff ? `${available} in the boutique` : 'In stock') : 'Currently unavailable'],
   ];
@@ -102,8 +109,9 @@ export function ProductDetailPage() {
             />
             {variants.length > 1 && (
               <div>
-                <p className="mb-3 text-[0.7rem] uppercase tracking-wide2 text-stone">
-                  Colour — <span className="text-ink">{activeColor?.color}</span>
+                <p className="mb-3 text-sm text-stone">
+                  Colour: <span className="font-medium text-ink">{activeColor?.color}</span>
+                  <span className="text-stone/70"> · {variants.length} options</span>
                 </p>
                 <div className="grid grid-cols-5 gap-3 sm:grid-cols-6">
                   {variants.map((v, i) => (
@@ -134,10 +142,11 @@ export function ProductDetailPage() {
             <p className="mt-4 text-2xl font-light text-ink">{formatMoney(product.priceCents)}</p>
             <div className="rule-gold mt-6" />
 
-            <p className="mt-6 text-sm leading-relaxed text-ink/70">
-              {product.description ??
-                `An exceptional ${product.category.toLowerCase()} timepiece by ${product.brand}, authenticated and ready for its next chapter.`}
-            </p>
+            {variants.length > 1 && (
+              <p className="mt-6 text-sm text-stone">
+                Selected colour: <span className="font-medium text-ink">{activeColor?.color}</span>
+              </p>
+            )}
 
             {/* Purchase */}
             <div className="mt-8">
@@ -193,15 +202,32 @@ export function ProductDetailPage() {
               )}
             </div>
 
-            {/* Specs */}
-            <dl className="mt-10 divide-y divide-ink/10 border-t border-ink/10">
-              {specs.map(([k, v]) => (
-                <div key={k} className="flex justify-between py-3 text-sm">
-                  <dt className="text-stone">{k}</dt>
-                  <dd className="text-ink">{v}</dd>
-                </div>
-              ))}
-            </dl>
+            {/* Specifications table */}
+            <div className="mt-10 border border-ink/10">
+              <p className="border-b border-ink/10 bg-cream/40 px-4 py-2.5 text-[0.7rem] uppercase tracking-wide2 text-stone">
+                Specifications
+              </p>
+              <div className="divide-y divide-ink/10">
+                {keyRows.map(([k, v]) => (
+                  <div key={k} className="flex justify-between gap-4 px-4 py-2.5 text-sm">
+                    <span className="text-stone">{k}</span>
+                    <span className="text-right text-ink">{v}</span>
+                  </div>
+                ))}
+                {product.specs?.map((s, i) => (
+                  <div key={`spec-${i}`} className="flex items-start gap-2 px-4 py-2.5 text-sm">
+                    <span className="mt-0.5 text-gold">•</span>
+                    <span className="text-ink">{s}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Description paragraph */}
+            <p className="mt-6 text-sm leading-relaxed text-ink/70">
+              {product.description ??
+                `An exceptional ${product.category.toLowerCase()} timepiece by ${product.brand}, authenticated and ready for its next chapter.`}
+            </p>
 
             {/* Assurances */}
             <div className="mt-8 grid grid-cols-3 gap-3 text-center">

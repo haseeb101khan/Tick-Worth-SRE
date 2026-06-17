@@ -1,5 +1,5 @@
 import { api } from './api';
-import { Product } from '../types';
+import { Product, ProductVariant } from '../types';
 
 export interface ProductQuery {
   brand?: string;
@@ -35,5 +35,14 @@ export async function createProduct(input: ProductInput): Promise<Product> {
 // Staff-only: edit an existing product. An empty imageUrl clears it to fallback art.
 export async function updateProduct(id: string, changes: Partial<ProductInput>): Promise<Product> {
   const { data } = await api.patch<Product>(`/products/${id}`, changes);
+  return data;
+}
+
+// Staff-only: replace a product's colour variants (array order = display position).
+export async function setProductVariants(
+  id: string,
+  variants: { color: string; imageUrl: string }[],
+): Promise<ProductVariant[]> {
+  const { data } = await api.put<ProductVariant[]>(`/products/${id}/variants`, { variants });
   return data;
 }

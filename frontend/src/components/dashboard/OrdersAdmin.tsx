@@ -119,6 +119,29 @@ export function OrdersAdmin({ products, onStockChange }: { products: Product[]; 
             )}
           </div>
 
+          {/* EasyPaisa payment proof — verify this before confirming an online payment. */}
+          {order.paymentMethod === 'ONLINE' && !order.paymentConfirmed && (
+            <div className="mb-3 rounded border border-amber-300 bg-amber-50 p-3 text-xs">
+              <p className="font-medium text-amber-800">EasyPaisa payment — verify before confirming</p>
+              <p className="mt-1 text-gray-700">
+                Sender: <span className="font-medium">{order.paymentSenderName || '—'}</span>
+                {order.paymentReference ? ` · Ref: ${order.paymentReference}` : ''}
+              </p>
+              {order.paymentProofUrl ? (
+                <a href={order.paymentProofUrl} target="_blank" rel="noopener noreferrer">
+                  <img
+                    src={order.paymentProofUrl}
+                    alt="Payment screenshot"
+                    className="mt-2 h-32 w-auto rounded border object-contain hover:opacity-90"
+                  />
+                  <span className="mt-1 block text-amber-700 underline">Open full screenshot</span>
+                </a>
+              ) : (
+                <p className="mt-1 text-red-600">No screenshot was attached.</p>
+              )}
+            </div>
+          )}
+
           <div className="flex flex-wrap items-center gap-2">
             {order.status === 'PENDING' && (
               <button
@@ -134,6 +157,7 @@ export function OrdersAdmin({ products, onStockChange }: { products: Product[]; 
               <>
                 {order.deliveryMethod !== 'PICKUP' && (
                   <select
+                    aria-label="Assign courier"
                     value={chosen[order.id] ?? ''}
                     onChange={(e) => setChosen((prev) => ({ ...prev, [order.id]: e.target.value }))}
                     className="rounded border px-2 py-1 text-xs"

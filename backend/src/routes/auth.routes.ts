@@ -7,4 +7,6 @@ export const authRoutes = Router();
 
 authRoutes.post('/register', asyncHandler(authController.register));
 authRoutes.post('/login', asyncHandler(authController.login));
+authRoutes.post('/verify', asyncHandler(authController.verifyEmail));
+authRoutes.post('/resend-verification', asyncHandler(authController.resendVerification));
 authRoutes.get('/me', authMiddleware, asyncHandler(authController.me));

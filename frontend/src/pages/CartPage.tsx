@@ -8,6 +8,8 @@ import { apiErrorMessage } from '../utils/apiError';
 import { formatMoney, stockAt } from '../utils/format';
 import { ReceiptModal } from '../components/ReceiptModal';
 import { WatchImage } from '../components/WatchImage';
+import { uploadPaymentProof } from '../utils/imageUpload';
+import { CONTACT } from '../utils/contact';
 import { DELIVERY_OPTIONS, DeliveryMethod, Order } from '../types';
 
 export function CartPage() {
@@ -22,6 +24,25 @@ export function CartPage() {
   const [busy, setBusy] = useState(false);
   const [receipt, setReceipt] = useState<{ order: Order; names: Record<string, string> } | null>(null);
 
+  // EasyPaisa proof (only used when paying online).
+  const [proofUrl, setProofUrl] = useState('');
+  const [proofUploading, setProofUploading] = useState(false);
+  const [senderName, setSenderName] = useState('');
+  const [reference, setReference] = useState('');
+
+  async function handleProofFile(file: File | undefined) {
+    if (!file) return;
+    setProofUploading(true);
+    try {
+      setProofUrl(await uploadPaymentProof(file));
+      toast.success('Screenshot uploaded');
+    } catch (err) {
+      toast.error(apiErrorMessage(err));
+    } finally {
+      setProofUploading(false);
+    }
+  }
+
   const isPickup = deliveryMethod === 'PICKUP';
   const deliveryFee = DELIVERY_OPTIONS.find((o) => o.value === deliveryMethod)?.feeCents ?? 0;
   const grandTotal = totalCents + deliveryFee;
@@ -30,6 +51,10 @@ export function CartPage() {
     e.preventDefault();
     if (!user) {
       navigate('/login', { state: { from: '/cart' } });
+      return;
+    }
+    if (paymentMethod === 'ONLINE' && (!proofUrl || !senderName.trim())) {
+      toast.error('Upload your EasyPaisa screenshot and enter the sender name');
       return;
     }
     setBusy(true);
@@ -42,6 +67,9 @@ export function CartPage() {
         paymentMethod,
         deliveryMethod,
         shippingAddress: isPickup ? undefined : address,
+        paymentProofUrl: paymentMethod === 'ONLINE' ? proofUrl : undefined,
+        paymentSenderName: paymentMethod === 'ONLINE' ? senderName.trim() : undefined,
+        paymentReference: paymentMethod === 'ONLINE' ? reference.trim() || undefined : undefined,
         items: items.map((i) => ({ productId: i.product.id, quantity: i.quantity, color: i.color })),
       });
       clear();
@@ -75,10 +103,13 @@ export function CartPage() {
           <div className="divide-y divide-ink/10 border-y border-ink/10">
             {items.map(({ product, quantity, color }) => {
               const max = stockAt(product, 'SHOP');
+              // Show the photo of the chosen colourway, not always the cover image.
+              const colorImage =
+                (color && product.variants?.find((v) => v.color === color)?.imageUrl) || product.imageUrl;
               return (
                 <div key={product.id} className="flex gap-5 py-6">
                   <Link to={`/shop/${product.id}`} className="w-24 shrink-0">
-                    <WatchImage name={product.name} brand={product.brand} imageUrl={product.imageUrl} width={300} className="aspect-square" />
+                    <WatchImage name={product.name} brand={product.brand} imageUrl={colorImage} width={300} className="aspect-square" />
                   </Link>
                   <div className="flex flex-1 flex-col">
                     <p className="eyebrow-muted">{product.brand}</p>
@@ -176,9 +207,58 @@ export function CartPage() {
                 </label>
                 <label className="flex items-center gap-2">
                   <input type="radio" className="accent-gold-dark" checked={paymentMethod === 'ONLINE'} onChange={() => setPaymentMethod('ONLINE')} />
-                  Pay online (mock)
+                  Pay online (EasyPaisa)
                 </label>
               </div>
+
+              {paymentMethod === 'ONLINE' && (
+                <div className="mt-3 border border-gold/40 bg-gold/5 p-4 text-sm">
+                  <p className="font-medium text-ink">How to pay with EasyPaisa</p>
+                  <ol className="mt-2 list-decimal space-y-1 pl-5 text-stone">
+                    <li>
+                      Send <span className="font-medium text-ink">{formatMoney(grandTotal)}</span> via EasyPaisa to{' '}
+                      <span className="font-medium text-ink">{CONTACT.easypaisaNumber}</span>.
+                    </li>
+                    <li>Take a screenshot of the successful transfer.</li>
+                    <li>Upload it below with the name on the account you paid from.</li>
+                    <li>Our team verifies it as soon as possible, then your parcel ships.</li>
+                  </ol>
+
+                  <div className="mt-4">
+                    <label className="label-luxe">Payment screenshot</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleProofFile(e.target.files?.[0])}
+                      className="block w-full text-xs text-stone file:mr-3 file:border-0 file:bg-ink file:px-3 file:py-1.5 file:text-ivory"
+                    />
+                    {proofUploading && <p className="mt-1 text-xs text-stone">Uploading…</p>}
+                    {proofUrl && !proofUploading && (
+                      <img src={proofUrl} alt="Payment proof" className="mt-2 h-28 w-auto rounded border border-ink/10 object-contain" />
+                    )}
+                  </div>
+
+                  <div className="mt-3">
+                    <label className="label-luxe">Sender name (on EasyPaisa)</label>
+                    <input
+                      value={senderName}
+                      onChange={(e) => setSenderName(e.target.value)}
+                      className="input-luxe"
+                      placeholder="Name the payment was sent from"
+                    />
+                  </div>
+
+                  <div className="mt-3">
+                    <label className="label-luxe">Transaction ID / sender number (optional)</label>
+                    <input
+                      value={reference}
+                      onChange={(e) => setReference(e.target.value)}
+                      className="input-luxe"
+                      placeholder="EasyPaisa TID or the number you paid from"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="mt-6 space-y-1.5 border-t border-ink/10 pt-5 text-sm">
@@ -196,7 +276,7 @@ export function CartPage() {
               </div>
             </div>
 
-            <button type="submit" disabled={busy || items.length === 0} className="btn-gold mt-6 w-full">
+            <button type="submit" disabled={busy || proofUploading || items.length === 0} className="btn-gold mt-6 w-full">
               {busy ? 'Placing order…' : user ? 'Place order' : 'Sign in to checkout'}
             </button>
           </form>

@@ -1,5 +1,5 @@
 import { FullReport, ShopkeeperReportData, WarehouseReportData } from '../types';
-import { formatMoney } from './format';
+import { formatDate, formatDateTime, formatMoney } from './format';
 import { SHOP } from './receipt';
 
 // Minimal HTML escaping for dynamic text (product/customer names, reasons).
@@ -11,8 +11,8 @@ function esc(v: unknown): string {
     .replace(/"/g, '&quot;');
 }
 
-const dateTime = (iso: string) => new Date(iso).toLocaleString();
-const dateOnly = (iso: string) => new Date(iso).toLocaleDateString();
+const dateTime = formatDateTime;
+const dateOnly = formatDate;
 
 function table(headers: string[], rows: string[][], empty = 'None in this period.'): string {
   if (rows.length === 0) return `<p class="muted">${empty}</p>`;

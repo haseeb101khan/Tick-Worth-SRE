@@ -121,6 +121,54 @@ function topFolderToBrandKey(top) {
   return resolveBrandKey(cleaned) ?? resolveBrandKey(top);
 }
 
+// Parse the optional "<Model>.txt" sheet the owner dropped into a model folder:
+// the real PKR price + a list of spec lines (for the detail-page table). Returns
+// null when there's no sheet.
+function readModelSheet(dir, brandKey) {
+  let txt;
+  try {
+    const file = fs.readdirSync(dir).find((f) => f.toLowerCase().endsWith('.txt'));
+    if (!file) return null;
+    txt = fs.readFileSync(path.join(dir, file), 'utf-8');
+  } catch {
+    return null;
+  }
+
+  const lines = txt.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+
+  // Price: the line mentioning PKR / RS / PRICE or a "/-" "/=" suffix. Take the
+  // largest number on it (avoids grabbing "1" from "1 Year Warranty"). PKR -> paisa.
+  let priceCents = null;
+  for (const line of lines) {
+    if (/(pkr|price|\brs\b|\/[-=])/i.test(line)) {
+      const nums = (line.replace(/,/g, '').match(/\d+/g) || []).map(Number);
+      if (nums.length) {
+        priceCents = Math.max(...nums) * 100;
+        break;
+      }
+    }
+  }
+
+  // Specs: clean each line, then drop the price line, the brand/title line, bare
+  // parentheticals like "(Mens Collection)", promo lines, and colour-availability
+  // lines (colours come from the actual photos, shown separately in the table).
+  const specs = lines
+    .map((l) => l.replace(/[*_]/g, '').replace(/^[••\-\s]+/, '').replace(/\s{2,}/g, ' ').trim())
+    .filter((l) => {
+      if (!l) return false;
+      const lc = l.toLowerCase();
+      const compact = lc.replace(/[^a-z0-9]/g, '');
+      if (/(pkr|price)/i.test(l) || /\d+\s*\/[-=]/.test(l)) return false; // price line
+      if (compact.includes(brandKey)) return false; // title line ("ROLEX Mens Watch")
+      if (/^\(.*\)$/.test(l)) return false; // "(Mens Collection)"
+      if (/new arrival|tick\s*\.?\s*worth/i.test(l)) return false; // promo
+      if (/colou?r/i.test(l) && /avail/i.test(l)) return false; // "Different colours available"
+      return true;
+    });
+
+  return { priceCents, specs };
+}
+
 function main() {
   if (!fs.existsSync(SRC)) {
     console.error(`No Watches folder found at ${SRC}`);
@@ -146,16 +194,11 @@ function main() {
 
     let key, leaf, forceCategory;
 
-    if (base.toLowerCase() === 'luxury watches') {
-      // Loose cover images that duplicate the "luxury diff models" galleries — skip.
+    if (base.toLowerCase() === 'luxury watches' || base.toLowerCase() === 'luxury diff models') {
+      // The "luxury watches" folder is duplicates of models that already exist under
+      // their own brand folders (with proper description sheets) — skip it entirely so
+      // each watch appears once.
       continue;
-    } else if (base.toLowerCase() === 'luxury diff models') {
-      // Flat folder; subgroup by filename prefix e.g. "audemars 1 (3).jpeg" -> "audemars 1".
-      const name = path.basename(file).replace(IMG_RE, '');
-      const prefix = name.replace(/\s*\(\d+\)\s*$/, '').trim();
-      key = parent + '::' + prefix;
-      leaf = prefix;
-      forceCategory = 'Luxury Sport';
     } else {
       key = parent;
       leaf = base;
@@ -171,6 +214,7 @@ function main() {
   const products = [];
   const usedNames = new Set();
   const perBrandCount = {};
+  let sheetCount = 0;
 
   for (const [, g] of [...groups.entries()].sort((a, b) => natCmp(a[0], b[0]))) {
     g.files.sort(natCmp);
@@ -218,29 +262,58 @@ function main() {
       return { color, imageUrl: url, position: i };
     });
 
-    const description =
-      `${profile.blurb} The ${collection} presents ${pick(CASES, seed)}, ${pick(WR, seed >>> 3)}. ` +
-      `${pick(MOVES, seed >>> 6)}, it is finished to a standard that belies its price. ${pick(CLOSERS, seed >>> 9)}`;
+    // A polished prose paragraph for under the spec table — deliberately free of
+    // specific technical claims so it never contradicts the real spec sheet.
+    const colourPhrase = urls.length > 1 ? `, offered in ${urls.length} colourways` : '';
+    const description = `${profile.blurb} Presented here as the ${collection}${colourPhrase}. ${pick(CLOSERS, seed)}`;
+
+    // The owner's real sheet supplies the price + the spec rows for the table.
+    const sheet = readModelSheet(path.dirname(g.files[0]), brandKey);
+    if (sheet) sheetCount++;
 
     products.push({
       slug,
       name,
       brand: profile.display,
       category,
-      priceCents,
+      priceCents: sheet?.priceCents ?? priceCents,
       description,
+      specs: sheet?.specs ?? [],
       imageUrl: urls[0],
       images: urls.slice(1),
       variants,
       imageCount: urls.length,
+      _fromSheet: !!sheet?.priceCents,
     });
   }
+
+  // The luxury-folder models have no owner sheet, so their generated price is still
+  // in the old (USD-era) band. Re-price them in PKR using the average real sheet
+  // price of the same brand (or the catalogue-wide average as a last resort), so the
+  // whole catalogue is consistently priced. Round to the nearest Rs 100.
+  const sheetPrices = products.filter((p) => p._fromSheet).map((p) => p.priceCents);
+  const globalAvg = sheetPrices.length
+    ? Math.round(sheetPrices.reduce((s, v) => s + v, 0) / sheetPrices.length / 10000) * 10000
+    : 250000;
+  const brandAvg = {};
+  for (const p of products) {
+    if (!p._fromSheet) continue;
+    (brandAvg[p.brand] ??= []).push(p.priceCents);
+  }
+  for (const p of products) {
+    if (p._fromSheet) continue;
+    const arr = brandAvg[p.brand];
+    p.priceCents = arr
+      ? Math.round(arr.reduce((s, v) => s + v, 0) / arr.length / 10000) * 10000
+      : globalAvg;
+  }
+  for (const p of products) delete p._fromSheet;
 
   products.sort((a, b) => a.brand.localeCompare(b.brand) || a.name.localeCompare(b.name));
   fs.writeFileSync(MANIFEST, JSON.stringify(products, null, 2));
 
   const totalImgs = products.reduce((s, p) => s + p.imageCount, 0);
-  console.log(`Imported ${products.length} models / ${totalImgs} colour variants -> ${path.relative(ROOT, PUBLIC_DIR)}`);
+  console.log(`Imported ${products.length} models / ${totalImgs} colour variants (${sheetCount} with owner price+description sheets) -> ${path.relative(ROOT, PUBLIC_DIR)}`);
   console.log(`Manifest -> ${path.relative(ROOT, MANIFEST)}`);
   const byBrand = {};
   for (const p of products) byBrand[p.brand] = (byBrand[p.brand] ?? 0) + 1;

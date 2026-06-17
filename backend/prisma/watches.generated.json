@@ -4,8 +4,18 @@
     "name": "Prayer",
     "brand": "Al-Fajr",
     "category": "Digital",
-    "priceCents": 5500,
-    "description": "Al-Fajr is trusted worldwide for its prayer-time watches, blending faith and function. The Prayer presents a 44mm case with a screw-down crown, sealed confidently against rain and splashes. Powered by a precision quartz movement, it is finished to a standard that belies its price. A piece that wears its confidence quietly.",
+    "priceCents": 2500000,
+    "description": "Al-Fajr is trusted worldwide for its prayer-time watches, blending faith and function. Presented here as the Prayer. Designed to be lived in, not just admired.",
+    "specs": [
+      "Rectangle Dial",
+      "Fine Quality",
+      "Japanese Movement",
+      "Automatic",
+      "Stainless Steel",
+      "Master Lock",
+      "With Original Box and Packaging",
+      "1 Year Warranty"
+    ],
     "imageUrl": "/watches/al-fajr-prayer/01.jpeg",
     "images": [],
     "variants": [
@@ -18,67 +28,22 @@
     "imageCount": 1
   },
   {
-    "slug": "audemars-piguet-code-11-59",
-    "name": "Code 11.59",
-    "brand": "Audemars Piguet",
-    "category": "Luxury Sport",
-    "priceCents": 27000,
-    "description": "In the hands of its founding families since 1875, Audemars Piguet remains a master of the luxury sports watch. The Code 11.59 presents a 42mm case finished and brushed by hand, water-resistant to 100 metres. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. A piece that wears its confidence quietly.",
-    "imageUrl": "/watches/audemars-piguet-code-11-59/01.jpeg",
-    "images": [
-      "/watches/audemars-piguet-code-11-59/02.jpeg",
-      "/watches/audemars-piguet-code-11-59/03.jpeg",
-      "/watches/audemars-piguet-code-11-59/04.jpeg",
-      "/watches/audemars-piguet-code-11-59/05.jpeg",
-      "/watches/audemars-piguet-code-11-59/06.jpeg",
-      "/watches/audemars-piguet-code-11-59/07.jpeg"
-    ],
-    "variants": [
-      {
-        "color": "Classic Black",
-        "imageUrl": "/watches/audemars-piguet-code-11-59/01.jpeg",
-        "position": 0
-      },
-      {
-        "color": "Silver Steel",
-        "imageUrl": "/watches/audemars-piguet-code-11-59/02.jpeg",
-        "position": 1
-      },
-      {
-        "color": "Rose Gold",
-        "imageUrl": "/watches/audemars-piguet-code-11-59/03.jpeg",
-        "position": 2
-      },
-      {
-        "color": "Two-Tone Gold",
-        "imageUrl": "/watches/audemars-piguet-code-11-59/04.jpeg",
-        "position": 3
-      },
-      {
-        "color": "Midnight Blue",
-        "imageUrl": "/watches/audemars-piguet-code-11-59/05.jpeg",
-        "position": 4
-      },
-      {
-        "color": "Forest Green",
-        "imageUrl": "/watches/audemars-piguet-code-11-59/06.jpeg",
-        "position": 5
-      },
-      {
-        "color": "Tan Leather",
-        "imageUrl": "/watches/audemars-piguet-code-11-59/07.jpeg",
-        "position": 6
-      }
-    ],
-    "imageCount": 7
-  },
-  {
     "slug": "audemars-piguet-jules-audemars",
     "name": "Jules Audemars",
     "brand": "Audemars Piguet",
     "category": "Automatic",
-    "priceCents": 18500,
-    "description": "In the hands of its founding families since 1875, Audemars Piguet remains a master of the luxury sports watch. The Jules Audemars presents a 42mm case finished and brushed by hand, water-resistant to 50 metres. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. Timeless proportions with a contemporary attitude.",
+    "priceCents": 1700000,
+    "description": "In the hands of its founding families since 1875, Audemars Piguet remains a master of the luxury sports watch. Presented here as the Jules Audemars, offered in 3 colourways. Equal parts instrument and statement.",
+    "specs": [
+      "Skeleton Model",
+      "Round Dial",
+      "Fine Quality",
+      "Japanese Movement",
+      "Automatic",
+      "Stainless Steel",
+      "Master Lock",
+      "With Original Box"
+    ],
     "imageUrl": "/watches/audemars-piguet-jules-audemars/01.jpeg",
     "images": [
       "/watches/audemars-piguet-jules-audemars/02.jpeg",
@@ -108,8 +73,16 @@
     "name": "Royal Oak",
     "brand": "Audemars Piguet",
     "category": "Luxury Sport",
-    "priceCents": 24000,
-    "description": "In the hands of its founding families since 1875, Audemars Piguet remains a master of the luxury sports watch. The Royal Oak presents a 44mm case with a screw-down crown, engineered to take everyday wear in its stride. A dependable movement keeps faultless time, it is finished to a standard that belies its price. Timeless proportions with a contemporary attitude.",
+    "priceCents": 200000,
+    "description": "In the hands of its founding families since 1875, Audemars Piguet remains a master of the luxury sports watch. Presented here as the Royal Oak, offered in 12 colourways. Considered, capable, and unmistakably modern.",
+    "specs": [
+      "Date Working",
+      "Round Dial",
+      "Fine Quality",
+      "Stainless Steel",
+      "Butterfly Lock",
+      "With Normal Box"
+    ],
     "imageUrl": "/watches/audemars-piguet-royal-oak/01.jpeg",
     "images": [
       "/watches/audemars-piguet-royal-oak/02.jpeg",
@@ -189,43 +162,22 @@
     "imageCount": 12
   },
   {
-    "slug": "audemars-piguet-royal-oak-ii",
-    "name": "Royal Oak II",
-    "brand": "Audemars Piguet",
-    "category": "Luxury Sport",
-    "priceCents": 27000,
-    "description": "In the hands of its founding families since 1875, Audemars Piguet remains a master of the luxury sports watch. The Royal Oak presents a 40mm case beneath a sapphire-coated crystal, water-resistant to 100 metres. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. A piece that wears its confidence quietly.",
-    "imageUrl": "/watches/audemars-piguet-royal-oak-ii/01.jpeg",
-    "images": [
-      "/watches/audemars-piguet-royal-oak-ii/02.jpeg",
-      "/watches/audemars-piguet-royal-oak-ii/03.jpeg"
-    ],
-    "variants": [
-      {
-        "color": "Classic Black",
-        "imageUrl": "/watches/audemars-piguet-royal-oak-ii/01.jpeg",
-        "position": 0
-      },
-      {
-        "color": "Silver Steel",
-        "imageUrl": "/watches/audemars-piguet-royal-oak-ii/02.jpeg",
-        "position": 1
-      },
-      {
-        "color": "Rose Gold",
-        "imageUrl": "/watches/audemars-piguet-royal-oak-ii/03.jpeg",
-        "position": 2
-      }
-    ],
-    "imageCount": 3
-  },
-  {
     "slug": "audemars-piguet-royal-oak-offshore",
     "name": "Royal Oak Offshore",
     "brand": "Audemars Piguet",
     "category": "Luxury Sport",
-    "priceCents": 24000,
-    "description": "In the hands of its founding families since 1875, Audemars Piguet remains a master of the luxury sports watch. The Royal Oak Offshore presents a 39mm case in mirror-polished steel, engineered to take everyday wear in its stride. A dependable movement keeps faultless time, it is finished to a standard that belies its price. Timeless proportions with a contemporary attitude.",
+    "priceCents": 1700000,
+    "description": "In the hands of its founding families since 1875, Audemars Piguet remains a master of the luxury sports watch. Presented here as the Royal Oak Offshore, offered in 3 colourways. Equal parts instrument and statement.",
+    "specs": [
+      "Skeleton Model",
+      "Round Dial",
+      "Fine Quality",
+      "Japanese Movement",
+      "Automatic",
+      "Stainless Steel",
+      "Master Lock",
+      "With Original Box"
+    ],
     "imageUrl": "/watches/audemars-piguet-royal-oak-offshore/01.jpeg",
     "images": [
       "/watches/audemars-piguet-royal-oak-offshore/02.jpeg",
@@ -255,8 +207,19 @@
     "name": "Aviator",
     "brand": "Benyar",
     "category": "Chronograph",
-    "priceCents": 9000,
-    "description": "Benyar blends aviator-inspired styling with chronograph function for the modern adventurer. The Aviator presents a 36mm case with a slim, wearable profile, water-resistant to 50 metres. A dependable movement keeps faultless time, it is finished to a standard that belies its price. A piece that wears its confidence quietly.",
+    "priceCents": 700000,
+    "description": "Benyar blends aviator-inspired styling with chronograph function for the modern adventurer. Presented here as the Aviator. Timeless proportions with a contemporary attitude.",
+    "specs": [
+      "CHRONOGRAPH WORKING",
+      "QUARTZ MOVEMENT",
+      "FINE QUALITY",
+      "⁠100% ORIGINAL⁠",
+      "FUNCTIONAL CHRONOMETERS",
+      "LEATHER BELT",
+      "BUCKLE LOCK",
+      "ONE COLOUR ONLY",
+      "WITH COMPLETE ORIGINAL PACKING"
+    ],
     "imageUrl": "/watches/benyar-aviator/01.jpeg",
     "images": [],
     "variants": [
@@ -269,55 +232,23 @@
     "imageCount": 1
   },
   {
-    "slug": "benyar-aviator-ii",
-    "name": "Aviator II",
-    "brand": "Benyar",
-    "category": "Luxury Sport",
-    "priceCents": 8000,
-    "description": "Benyar blends aviator-inspired styling with chronograph function for the modern adventurer. The Aviator presents a 43mm case with an exhibition caseback, water-resistant to 50 metres. Powered by a precision quartz movement, it is finished to a standard that belies its price. Made for the wrist that notices the details.",
-    "imageUrl": "/watches/benyar-aviator-ii/01.jpeg",
-    "images": [
-      "/watches/benyar-aviator-ii/02.jpeg",
-      "/watches/benyar-aviator-ii/03.jpeg",
-      "/watches/benyar-aviator-ii/04.jpeg",
-      "/watches/benyar-aviator-ii/05.jpeg"
-    ],
-    "variants": [
-      {
-        "color": "Classic Black",
-        "imageUrl": "/watches/benyar-aviator-ii/01.jpeg",
-        "position": 0
-      },
-      {
-        "color": "Silver Steel",
-        "imageUrl": "/watches/benyar-aviator-ii/02.jpeg",
-        "position": 1
-      },
-      {
-        "color": "Rose Gold",
-        "imageUrl": "/watches/benyar-aviator-ii/03.jpeg",
-        "position": 2
-      },
-      {
-        "color": "Two-Tone Gold",
-        "imageUrl": "/watches/benyar-aviator-ii/04.jpeg",
-        "position": 3
-      },
-      {
-        "color": "Midnight Blue",
-        "imageUrl": "/watches/benyar-aviator-ii/05.jpeg",
-        "position": 4
-      }
-    ],
-    "imageCount": 5
-  },
-  {
     "slug": "benyar-pilot-chrono",
     "name": "Pilot Chrono",
     "brand": "Benyar",
     "category": "Chronograph",
-    "priceCents": 9000,
-    "description": "Benyar blends aviator-inspired styling with chronograph function for the modern adventurer. The Pilot Chrono presents a 41mm case in surgical-grade stainless steel, water-resistant to 50 metres. A dependable movement keeps faultless time, it is finished to a standard that belies its price. A piece that wears its confidence quietly.",
+    "priceCents": 800000,
+    "description": "Benyar blends aviator-inspired styling with chronograph function for the modern adventurer. Presented here as the Pilot Chrono. Designed to be lived in, not just admired.",
+    "specs": [
+      "Square Edition",
+      "Roman Dial",
+      "Quartz Machine",
+      "Fine Quality",
+      "ALL Chronograph Working",
+      "Date Working",
+      "Leather Strap",
+      "1 Colour",
+      "With Original Brand Box, Bag, Catalog, Card, Selvet and Tag."
+    ],
     "imageUrl": "/watches/benyar-pilot-chrono/01.jpeg",
     "images": [],
     "variants": [
@@ -330,49 +261,23 @@
     "imageCount": 1
   },
   {
-    "slug": "benyar-pilot-chrono-ii",
-    "name": "Pilot Chrono II",
-    "brand": "Benyar",
-    "category": "Luxury Sport",
-    "priceCents": 8000,
-    "description": "Benyar blends aviator-inspired styling with chronograph function for the modern adventurer. The Pilot Chrono presents a 36mm case with a slim, wearable profile, water-resistant to 50 metres. Powered by a precision quartz movement, it is finished to a standard that belies its price. Made for the wrist that notices the details.",
-    "imageUrl": "/watches/benyar-pilot-chrono-ii/01.jpeg",
-    "images": [
-      "/watches/benyar-pilot-chrono-ii/02.jpeg",
-      "/watches/benyar-pilot-chrono-ii/03.jpeg",
-      "/watches/benyar-pilot-chrono-ii/04.jpeg"
-    ],
-    "variants": [
-      {
-        "color": "Classic Black",
-        "imageUrl": "/watches/benyar-pilot-chrono-ii/01.jpeg",
-        "position": 0
-      },
-      {
-        "color": "Silver Steel",
-        "imageUrl": "/watches/benyar-pilot-chrono-ii/02.jpeg",
-        "position": 1
-      },
-      {
-        "color": "Rose Gold",
-        "imageUrl": "/watches/benyar-pilot-chrono-ii/03.jpeg",
-        "position": 2
-      },
-      {
-        "color": "Two-Tone Gold",
-        "imageUrl": "/watches/benyar-pilot-chrono-ii/04.jpeg",
-        "position": 3
-      }
-    ],
-    "imageCount": 4
-  },
-  {
     "slug": "benyar-skyhawk",
     "name": "Skyhawk",
     "brand": "Benyar",
     "category": "Chronograph",
-    "priceCents": 9000,
-    "description": "Benyar blends aviator-inspired styling with chronograph function for the modern adventurer. The Skyhawk presents a 42mm case finished and brushed by hand, water-resistant to 50 metres. A dependable movement keeps faultless time, it is finished to a standard that belies its price. A piece that wears its confidence quietly.",
+    "priceCents": 1200000,
+    "description": "Benyar blends aviator-inspired styling with chronograph function for the modern adventurer. Presented here as the Skyhawk. A piece that wears its confidence quietly.",
+    "specs": [
+      "Date Working",
+      "Quartz Movement",
+      "Fine Quality",
+      "⁠100% Original⁠",
+      "All Chronometer Working",
+      "⁠Stainless Steel Chain",
+      "Master Lock",
+      "1 Colour",
+      "WITH COMPLETE ORIGINAL PACKING"
+    ],
     "imageUrl": "/watches/benyar-skyhawk/01.jpeg",
     "images": [],
     "variants": [
@@ -385,37 +290,21 @@
     "imageCount": 1
   },
   {
-    "slug": "benyar-skyhawk-ii",
-    "name": "Skyhawk II",
-    "brand": "Benyar",
-    "category": "Luxury Sport",
-    "priceCents": 8000,
-    "description": "Benyar blends aviator-inspired styling with chronograph function for the modern adventurer. The Skyhawk presents a 41mm case in surgical-grade stainless steel, water-resistant to 50 metres. Powered by a precision quartz movement, it is finished to a standard that belies its price. Made for the wrist that notices the details.",
-    "imageUrl": "/watches/benyar-skyhawk-ii/01.jpeg",
-    "images": [
-      "/watches/benyar-skyhawk-ii/02.jpeg"
-    ],
-    "variants": [
-      {
-        "color": "Classic Black",
-        "imageUrl": "/watches/benyar-skyhawk-ii/01.jpeg",
-        "position": 0
-      },
-      {
-        "color": "Silver Steel",
-        "imageUrl": "/watches/benyar-skyhawk-ii/02.jpeg",
-        "position": 1
-      }
-    ],
-    "imageCount": 2
-  },
-  {
     "slug": "bestwin-classic",
     "name": "Classic",
     "brand": "Bestwin",
     "category": "Fashion",
-    "priceCents": 4000,
-    "description": "Bestwin delivers clean, versatile design made for everyday rotation. The Classic presents a 43mm case with an exhibition caseback, water-resistant to 100 metres. A dependable movement keeps faultless time, it is finished to a standard that belies its price. Equal parts instrument and statement.",
+    "priceCents": 250000,
+    "description": "Bestwin delivers clean, versatile design made for everyday rotation. Presented here as the Classic, offered in 8 colourways. Made for the wrist that notices the details.",
+    "specs": [
+      "New Latest Model",
+      "Quartz Machine",
+      "Fine Quality",
+      "Heavy Weight",
+      "Date Working",
+      "Stainless Steel Chain",
+      "Master Lock"
+    ],
     "imageUrl": "/watches/bestwin-classic/01.jpeg",
     "images": [
       "/watches/bestwin-classic/02.jpeg",
@@ -475,8 +364,18 @@
     "name": "Urban",
     "brand": "Bestwin",
     "category": "Fashion",
-    "priceCents": 4000,
-    "description": "Bestwin delivers clean, versatile design made for everyday rotation. The Urban presents a 36mm case with a slim, wearable profile, water-resistant to 100 metres. A dependable movement keeps faultless time, it is finished to a standard that belies its price. Equal parts instrument and statement.",
+    "priceCents": 270000,
+    "description": "Bestwin delivers clean, versatile design made for everyday rotation. Presented here as the Urban, offered in 7 colourways. Timeless proportions with a contemporary attitude.",
+    "specs": [
+      "New Latest Model",
+      "Quartz Machine",
+      "Fine Quality",
+      "Heavy Weight",
+      "Date Working",
+      "Stainless Steel Chain",
+      "Master Lock",
+      "Water Resistant 30M"
+    ],
     "imageUrl": "/watches/bestwin-urban/01.jpeg",
     "images": [
       "/watches/bestwin-urban/02.jpeg",
@@ -530,8 +429,16 @@
     "name": "Allure",
     "brand": "Curren",
     "category": "Women's",
-    "priceCents": 4500,
-    "description": "Curren designs elegant, on-trend timepieces with an eye for detail. The Allure presents a 39mm case in mirror-polished steel, sealed confidently against rain and splashes. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. Made for the wrist that notices the details.",
+    "priceCents": 350000,
+    "description": "Curren designs elegant, on-trend timepieces with an eye for detail. Presented here as the Allure, offered in 4 colourways. A piece that wears its confidence quietly.",
+    "specs": [
+      "New Elegant Model",
+      "Round Dial",
+      "Quartz Machine",
+      "Fine Quality",
+      "Stainless Steel Chain",
+      "With Brand Card & Pouch"
+    ],
     "imageUrl": "/watches/curren-allure/01.jpeg",
     "images": [
       "/watches/curren-allure/02.jpeg",
@@ -567,8 +474,17 @@
     "name": "Heritage",
     "brand": "Fitron",
     "category": "Classic",
-    "priceCents": 8000,
-    "description": "Fitron offers classic dress sensibility with quiet, dependable charm. The Heritage presents a 39mm case in mirror-polished steel, water-resistant to 50 metres. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. A piece that wears its confidence quietly.",
+    "priceCents": 500000,
+    "description": "Fitron offers classic dress sensibility with quiet, dependable charm. Presented here as the Heritage, offered in 4 colourways. Designed to be lived in, not just admired.",
+    "specs": [
+      "SQUARE MODEL",
+      "Date Working",
+      "Stainless Steel bracelet with master lock",
+      "Great quailty & finishing",
+      "Heavy Weight",
+      "LIMITED STOCK",
+      "With Premium Packaging"
+    ],
     "imageUrl": "/watches/fitron-heritage/01.jpeg",
     "images": [
       "/watches/fitron-heritage/02.jpeg",
@@ -600,37 +516,22 @@
     "imageCount": 4
   },
   {
-    "slug": "forsinning-openwork",
-    "name": "Openwork",
-    "brand": "Forsinning",
-    "category": "Luxury Sport",
-    "priceCents": 9000,
-    "description": "Forsinning showcases the mechanical art of the skeleton dial, gears in open view. The Openwork presents a 42mm case finished and brushed by hand, water-resistant to 50 metres. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. Considered, capable, and unmistakably modern.",
-    "imageUrl": "/watches/forsinning-openwork/01.jpeg",
-    "images": [
-      "/watches/forsinning-openwork/02.jpeg"
-    ],
-    "variants": [
-      {
-        "color": "Classic Black",
-        "imageUrl": "/watches/forsinning-openwork/01.jpeg",
-        "position": 0
-      },
-      {
-        "color": "Silver Steel",
-        "imageUrl": "/watches/forsinning-openwork/02.jpeg",
-        "position": 1
-      }
-    ],
-    "imageCount": 2
-  },
-  {
     "slug": "forsinning-skeleton",
     "name": "Skeleton",
     "brand": "Forsinning",
     "category": "Automatic",
-    "priceCents": 10000,
-    "description": "Forsinning showcases the mechanical art of the skeleton dial, gears in open view. The Skeleton presents a 36mm case with a slim, wearable profile, water-resistant to 100 metres. A dependable movement keeps faultless time, it is finished to a standard that belies its price. A piece that wears its confidence quietly.",
+    "priceCents": 800000,
+    "description": "Forsinning showcases the mechanical art of the skeleton dial, gears in open view. Presented here as the Skeleton, offered in 2 colourways. Designed to be lived in, not just admired.",
+    "specs": [
+      "Skeleton Model",
+      "Rectangle Dial",
+      "Fine Quality",
+      "Japanese Movement",
+      "Automatic",
+      "Leather Strap",
+      "Master Lock",
+      "With Original Box"
+    ],
     "imageUrl": "/watches/forsinning-skeleton/01.jpeg",
     "images": [
       "/watches/forsinning-skeleton/02.jpeg"
@@ -654,8 +555,14 @@
     "name": "Glamour",
     "brand": "Guess",
     "category": "Women's",
-    "priceCents": 10000,
-    "description": "Guess turns the everyday into a statement with glamorous, fashion-led design. The Glamour presents a 41mm case in surgical-grade stainless steel, water-resistant to 50 metres. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. Made for the wrist that notices the details.",
+    "priceCents": 200000,
+    "description": "Guess turns the everyday into a statement with glamorous, fashion-led design. Presented here as the Glamour, offered in 5 colourways. A piece that wears its confidence quietly.",
+    "specs": [
+      "New Elegant Model",
+      "Bangle style",
+      "Quartz Machine",
+      "Fine Quality"
+    ],
     "imageUrl": "/watches/guess-glamour/01.jpeg",
     "images": [
       "/watches/guess-glamour/02.jpeg",
@@ -697,8 +604,18 @@
     "name": "Big Bang",
     "brand": "Hublot",
     "category": "Luxury Sport",
-    "priceCents": 20000,
-    "description": "Hublot's art of fusion marries unexpected materials into bold, contemporary statements. The Big Bang presents a 42mm case finished and brushed by hand, water-resistant to 50 metres. Powered by a precision quartz movement, it is finished to a standard that belies its price. Equal parts instrument and statement.",
+    "priceCents": 250000,
+    "description": "Hublot's art of fusion marries unexpected materials into bold, contemporary statements. Presented here as the Big Bang, offered in 4 colourways. Designed to be lived in, not just admired.",
+    "specs": [
+      "Half Skeleton Model",
+      "Round Dial",
+      "Quartz Machine",
+      "Fine Quality",
+      "Heavy Weight",
+      "Date Working",
+      "Stainless Steel Chain",
+      "Master Lock"
+    ],
     "imageUrl": "/watches/hublot-big-bang/01.jpeg",
     "images": [
       "/watches/hublot-big-bang/02.jpeg",
@@ -734,8 +651,15 @@
     "name": "Classic Fusion",
     "brand": "Hublot",
     "category": "Luxury Sport",
-    "priceCents": 20000,
-    "description": "Hublot's art of fusion marries unexpected materials into bold, contemporary statements. The Classic Fusion presents a 40mm case beneath a sapphire-coated crystal, water-resistant to 100 metres. Powered by a precision quartz movement, it is finished to a standard that belies its price. Equal parts instrument and statement.",
+    "priceCents": 270000,
+    "description": "Hublot's art of fusion marries unexpected materials into bold, contemporary statements. Presented here as the Classic Fusion, offered in 9 colourways. A piece that wears its confidence quietly.",
+    "specs": [
+      "Diamond cut",
+      "Date working",
+      "Skeleton dial",
+      "Stainless steel chain",
+      "Silicon Strap"
+    ],
     "imageUrl": "/watches/hublot-classic-fusion/01.jpeg",
     "images": [
       "/watches/hublot-classic-fusion/02.jpeg",
@@ -801,8 +725,15 @@
     "name": "Spirit of Big Bang",
     "brand": "Hublot",
     "category": "Luxury Sport",
-    "priceCents": 20000,
-    "description": "Hublot's art of fusion marries unexpected materials into bold, contemporary statements. The Spirit of Big Bang presents a 44mm case with a screw-down crown, water-resistant to 100 metres. Powered by a precision quartz movement, it is finished to a standard that belies its price. Equal parts instrument and statement.",
+    "priceCents": 250000,
+    "description": "Hublot's art of fusion marries unexpected materials into bold, contemporary statements. Presented here as the Spirit of Big Bang, offered in 15 colourways. Considered, capable, and unmistakably modern.",
+    "specs": [
+      "Quartz movement",
+      "Date working",
+      "Rubber strap with master lock",
+      "Great quailty & finishing",
+      "LIMITED STOCK"
+    ],
     "imageUrl": "/watches/hublot-spirit-of-big-bang/01.jpeg",
     "images": [
       "/watches/hublot-spirit-of-big-bang/02.jpeg",
@@ -904,8 +835,14 @@
     "name": "Petite",
     "brand": "IEKE",
     "category": "Women's",
-    "priceCents": 3500,
-    "description": "IEKE crafts delicate, feminine watches with refined detailing. The Petite presents a 39mm case in mirror-polished steel, engineered to take everyday wear in its stride. Powered by a precision quartz movement, it is finished to a standard that belies its price. Considered, capable, and unmistakably modern.",
+    "priceCents": 200000,
+    "description": "IEKE crafts delicate, feminine watches with refined detailing. Presented here as the Petite, offered in 4 colourways. Designed to be lived in, not just admired.",
+    "specs": [
+      "New Elegant Model",
+      "Round Dial",
+      "Quartz Machine",
+      "Fine Quality"
+    ],
     "imageUrl": "/watches/ieke-petite/01.jpeg",
     "images": [
       "/watches/ieke-petite/02.jpeg",
@@ -941,8 +878,14 @@
     "name": "Bloom",
     "brand": "Jarvinia",
     "category": "Women's",
-    "priceCents": 3500,
-    "description": "Jarvinia celebrates graceful design made for the modern woman. The Bloom presents a 39mm case in mirror-polished steel, engineered to take everyday wear in its stride. A dependable movement keeps faultless time, it is finished to a standard that belies its price. Considered, capable, and unmistakably modern.",
+    "priceCents": 250000,
+    "description": "Jarvinia celebrates graceful design made for the modern woman. Presented here as the Bloom. Designed to be lived in, not just admired.",
+    "specs": [
+      "New Elegant Model",
+      "Round Dial",
+      "Quartz Machine",
+      "Fine Quality"
+    ],
     "imageUrl": "/watches/jarvinia-bloom/01.jpeg",
     "images": [],
     "variants": [
@@ -959,8 +902,17 @@
     "name": "Heritage",
     "brand": "Matturi",
     "category": "Luxury",
-    "priceCents": 9000,
-    "description": "Matturi composes statement timepieces for those who dress with intent. The Heritage presents a 40mm case beneath a sapphire-coated crystal, sealed confidently against rain and splashes. At its heart, an automatic movement with a visible rotor, it is finished to a standard that belies its price. A piece that wears its confidence quietly.",
+    "priceCents": 300000,
+    "description": "Matturi composes statement timepieces for those who dress with intent. Presented here as the Heritage, offered in 5 colourways. Considered, capable, and unmistakably modern.",
+    "specs": [
+      "Square Model",
+      "Latest Designs",
+      "Fine Quality",
+      "Heavy Weight",
+      "Day Chronograph Working",
+      "Date Working",
+      "Silicon Strap"
+    ],
     "imageUrl": "/watches/matturi-heritage/01.jpeg",
     "images": [
       "/watches/matturi-heritage/02.jpeg",
@@ -1002,8 +954,15 @@
     "name": "Imperial",
     "brand": "Matturi",
     "category": "Luxury",
-    "priceCents": 9000,
-    "description": "Matturi composes statement timepieces for those who dress with intent. The Imperial presents a 44mm case with a screw-down crown, engineered to take everyday wear in its stride. At its heart, an automatic movement with a visible rotor, it is finished to a standard that belies its price. A piece that wears its confidence quietly.",
+    "priceCents": 250000,
+    "description": "Matturi composes statement timepieces for those who dress with intent. Presented here as the Imperial, offered in 4 colourways. Equal parts instrument and statement.",
+    "specs": [
+      "Round Model",
+      "Latest Designs",
+      "Fine Quality",
+      "Heavy Weight",
+      "Stainless Steel Chain"
+    ],
     "imageUrl": "/watches/matturi-imperial/01.jpeg",
     "images": [
       "/watches/matturi-imperial/02.jpeg",
@@ -1039,8 +998,17 @@
     "name": "Noir",
     "brand": "Matturi",
     "category": "Luxury",
-    "priceCents": 9000,
-    "description": "Matturi composes statement timepieces for those who dress with intent. The Noir presents a 39mm case in mirror-polished steel, engineered to take everyday wear in its stride. At its heart, an automatic movement with a visible rotor, it is finished to a standard that belies its price. A piece that wears its confidence quietly.",
+    "priceCents": 300000,
+    "description": "Matturi composes statement timepieces for those who dress with intent. Presented here as the Noir, offered in 6 colourways. Made for the wrist that notices the details.",
+    "specs": [
+      "Square Model",
+      "Date Working",
+      "Day Chronograph Working",
+      "Latest Designs",
+      "Fine Quality",
+      "Heavy Weight",
+      "Stainless Steel Chain"
+    ],
     "imageUrl": "/watches/matturi-noir/01.jpeg",
     "images": [
       "/watches/matturi-noir/02.jpeg",
@@ -1088,8 +1056,14 @@
     "name": "Aquanaut",
     "brand": "Patek Philippe",
     "category": "Luxury",
-    "priceCents": 31000,
-    "description": "Patek Philippe crafts heirlooms — you never truly own one, you merely look after it for the next generation. The Aquanaut presents a 36mm case with a slim, wearable profile, sealed confidently against rain and splashes. At its heart, an automatic movement with a visible rotor, it is finished to a standard that belies its price. Timeless proportions with a contemporary attitude.",
+    "priceCents": 270000,
+    "description": "Patek Philippe crafts heirlooms — you never truly own one, you merely look after it for the next generation. Presented here as the Aquanaut, offered in 6 colourways. Made for the wrist that notices the details.",
+    "specs": [
+      "GENTS COLLECTION",
+      "MOST DEMANDING EDITION",
+      "STAINLESS STEEL SMOOTH CHAIN, BRASS CASE WITH BUTTERFLY LOCK",
+      "WITH DATE"
+    ],
     "imageUrl": "/watches/patek-philippe-aquanaut/01.jpeg",
     "images": [
       "/watches/patek-philippe-aquanaut/02.jpeg",
@@ -1137,8 +1111,14 @@
     "name": "Calatrava",
     "brand": "Patek Philippe",
     "category": "Luxury",
-    "priceCents": 31000,
-    "description": "Patek Philippe crafts heirlooms — you never truly own one, you merely look after it for the next generation. The Calatrava presents a 41mm case in surgical-grade stainless steel, sealed confidently against rain and splashes. At its heart, an automatic movement with a visible rotor, it is finished to a standard that belies its price. Timeless proportions with a contemporary attitude.",
+    "priceCents": 300000,
+    "description": "Patek Philippe crafts heirlooms — you never truly own one, you merely look after it for the next generation. Presented here as the Calatrava, offered in 4 colourways. Timeless proportions with a contemporary attitude.",
+    "specs": [
+      "GENTS COLLECTION",
+      "MOST DEMANDING EDITION",
+      "STAINLESS STEEL SMOOTH CHAIN, BRASS CASE WITH BUTTERFLY LOCK",
+      "WITH DATE, Day and Day/Night Chrono Working"
+    ],
     "imageUrl": "/watches/patek-philippe-calatrava/01.jpeg",
     "images": [
       "/watches/patek-philippe-calatrava/02.jpeg",
@@ -1174,8 +1154,14 @@
     "name": "Grand Complications",
     "brand": "Patek Philippe",
     "category": "Luxury",
-    "priceCents": 31000,
-    "description": "Patek Philippe crafts heirlooms — you never truly own one, you merely look after it for the next generation. The Grand Complications presents a 42mm case finished and brushed by hand, sealed confidently against rain and splashes. At its heart, an automatic movement with a visible rotor, it is finished to a standard that belies its price. Timeless proportions with a contemporary attitude.",
+    "priceCents": 270000,
+    "description": "Patek Philippe crafts heirlooms — you never truly own one, you merely look after it for the next generation. Presented here as the Grand Complications, offered in 5 colourways. Designed to be lived in, not just admired.",
+    "specs": [
+      "GENTS COLLECTION",
+      "MOST DEMANDING EDITION",
+      "STAINLESS STEEL SMOOTH CHAIN, BRASS CASE WITH BUTTERFLY LOCK",
+      "WITH DATE"
+    ],
     "imageUrl": "/watches/patek-philippe-grand-complications/01.jpeg",
     "images": [
       "/watches/patek-philippe-grand-complications/02.jpeg",
@@ -1217,8 +1203,15 @@
     "name": "Nautilus",
     "brand": "Patek Philippe",
     "category": "Women's",
-    "priceCents": 33500,
-    "description": "Patek Philippe crafts heirlooms — you never truly own one, you merely look after it for the next generation. The Nautilus presents a 41mm case in surgical-grade stainless steel, water-resistant to 50 metres. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. Timeless proportions with a contemporary attitude.",
+    "priceCents": 250000,
+    "description": "Patek Philippe crafts heirlooms — you never truly own one, you merely look after it for the next generation. Presented here as the Nautilus, offered in 4 colourways. Designed to be lived in, not just admired.",
+    "specs": [
+      "New Elegant Model",
+      "Square Dial",
+      "Quartz Machine",
+      "Fine Quality",
+      "Stainless Steel Chain"
+    ],
     "imageUrl": "/watches/patek-philippe-nautilus/01.jpeg",
     "images": [
       "/watches/patek-philippe-nautilus/02.jpeg",
@@ -1254,8 +1247,14 @@
     "name": "Nautilus II",
     "brand": "Patek Philippe",
     "category": "Luxury",
-    "priceCents": 31000,
-    "description": "Patek Philippe crafts heirlooms — you never truly own one, you merely look after it for the next generation. The Nautilus presents a 44mm case with a screw-down crown, engineered to take everyday wear in its stride. At its heart, an automatic movement with a visible rotor, it is finished to a standard that belies its price. Timeless proportions with a contemporary attitude.",
+    "priceCents": 1000000,
+    "description": "Patek Philippe crafts heirlooms — you never truly own one, you merely look after it for the next generation. Presented here as the Nautilus, offered in 4 colourways. Considered, capable, and unmistakably modern.",
+    "specs": [
+      "GENTS COLLECTION",
+      "MOST DEMANDING EDITION",
+      "STAINLESS STEEL SMOOTH CHAIN, BRASS CASE WITH BUTTERFLY LOCK",
+      "WITH Chronograph Working"
+    ],
     "imageUrl": "/watches/patek-philippe-nautilus-ii/01.jpeg",
     "images": [
       "/watches/patek-philippe-nautilus-ii/02.jpeg",
@@ -1291,8 +1290,14 @@
     "name": "Twenty~4",
     "brand": "Patek Philippe",
     "category": "Luxury",
-    "priceCents": 31000,
-    "description": "Patek Philippe crafts heirlooms — you never truly own one, you merely look after it for the next generation. The Twenty~4 presents a 40mm case beneath a sapphire-coated crystal, engineered to take everyday wear in its stride. At its heart, an automatic movement with a visible rotor, it is finished to a standard that belies its price. Timeless proportions with a contemporary attitude.",
+    "priceCents": 270000,
+    "description": "Patek Philippe crafts heirlooms — you never truly own one, you merely look after it for the next generation. Presented here as the Twenty~4, offered in 4 colourways. A piece that wears its confidence quietly.",
+    "specs": [
+      "GENTS COLLECTION",
+      "MOST DEMANDING EDITION",
+      "STAINLESS STEEL SMOOTH CHAIN, BRASS CASE WITH BUTTERFLY LOCK",
+      "WITH DATE"
+    ],
     "imageUrl": "/watches/patek-philippe-twenty-4/01.jpeg",
     "images": [
       "/watches/patek-philippe-twenty-4/02.jpeg",
@@ -1328,8 +1333,16 @@
     "name": "Linea",
     "brand": "Reward",
     "category": "Women's",
-    "priceCents": 6000,
-    "description": "Reward strips watch design to its essentials: clean dials and honest proportions. The Linea presents a 42mm case finished and brushed by hand, water-resistant to 50 metres. A dependable movement keeps faultless time, it is finished to a standard that belies its price. A piece that wears its confidence quietly.",
+    "priceCents": 500000,
+    "description": "Reward strips watch design to its essentials: clean dials and honest proportions. Presented here as the Linea, offered in 4 colourways. A piece that wears its confidence quietly.",
+    "specs": [
+      "New Elegant Model",
+      "Square Dial",
+      "Quartz Machine",
+      "Fine Quality",
+      "Stainless Steel Chain",
+      "With Brand Card & Pouch"
+    ],
     "imageUrl": "/watches/reward-linea/01.jpeg",
     "images": [
       "/watches/reward-linea/02.jpeg",
@@ -1365,8 +1378,15 @@
     "name": "Minimal",
     "brand": "Reward",
     "category": "Women's",
-    "priceCents": 6000,
-    "description": "Reward strips watch design to its essentials: clean dials and honest proportions. The Minimal presents a 36mm case with a slim, wearable profile, water-resistant to 50 metres. A dependable movement keeps faultless time, it is finished to a standard that belies its price. A piece that wears its confidence quietly.",
+    "priceCents": 250000,
+    "description": "Reward strips watch design to its essentials: clean dials and honest proportions. Presented here as the Minimal, offered in 2 colourways. Timeless proportions with a contemporary attitude.",
+    "specs": [
+      "New Elegant Model",
+      "Round Dial",
+      "Quartz Machine",
+      "Fine Quality",
+      "Stainless Steel Chain"
+    ],
     "imageUrl": "/watches/reward-minimal/01.jpeg",
     "images": [
       "/watches/reward-minimal/02.jpeg"
@@ -1390,8 +1410,20 @@
     "name": "Minimal II",
     "brand": "Reward",
     "category": "Minimalist",
-    "priceCents": 6500,
-    "description": "Reward strips watch design to its essentials: clean dials and honest proportions. The Minimal presents a 43mm case with an exhibition caseback, sealed confidently against rain and splashes. At its heart, an automatic movement with a visible rotor, it is finished to a standard that belies its price. Equal parts instrument and statement.",
+    "priceCents": 500000,
+    "description": "Reward strips watch design to its essentials: clean dials and honest proportions. Presented here as the Minimal, offered in 3 colourways. A piece that wears its confidence quietly.",
+    "specs": [
+      "~ VIP EDITION \"AAA\"",
+      "~ 3 COLOURS",
+      "~ WATERPROOF SILICON SMOOTH STRAP",
+      "~ ULTRA SLIM",
+      "~ DATE WORKING",
+      "~ HIGH QUALITY PLATING",
+      "~ WATER PROOF UPTO 30 MTR",
+      "~ MINERAL SCRATCH PROOF GLASS",
+      "~ WITH PREMIUM BRANDED PACKAGING",
+      "~ JAPANESE QUARTZ MOVEMENT"
+    ],
     "imageUrl": "/watches/reward-minimal-ii/01.jpeg",
     "images": [
       "/watches/reward-minimal-ii/02.jpeg",
@@ -1421,8 +1453,17 @@
     "name": "Slate",
     "brand": "Reward",
     "category": "Women's",
-    "priceCents": 6000,
-    "description": "Reward strips watch design to its essentials: clean dials and honest proportions. The Slate presents a 41mm case in surgical-grade stainless steel, water-resistant to 50 metres. A dependable movement keeps faultless time, it is finished to a standard that belies its price. A piece that wears its confidence quietly.",
+    "priceCents": 700000,
+    "description": "Reward strips watch design to its essentials: clean dials and honest proportions. Presented here as the Slate, offered in 6 colourways. Designed to be lived in, not just admired.",
+    "specs": [
+      "New Elegant Model",
+      "Round Dial",
+      "Quartz Machine",
+      "All Chronograph Working",
+      "Fine Quality",
+      "Stainless Steel Chain",
+      "With Brand Card & Pouch"
+    ],
     "imageUrl": "/watches/reward-slate/01.jpeg",
     "images": [
       "/watches/reward-slate/02.jpeg",
@@ -1470,8 +1511,19 @@
     "name": "Slate II",
     "brand": "Reward",
     "category": "Minimalist",
-    "priceCents": 6500,
-    "description": "Reward strips watch design to its essentials: clean dials and honest proportions. The Slate presents a 36mm case with a slim, wearable profile, sealed confidently against rain and splashes. At its heart, an automatic movement with a visible rotor, it is finished to a standard that belies its price. Equal parts instrument and statement.",
+    "priceCents": 500000,
+    "description": "Reward strips watch design to its essentials: clean dials and honest proportions. Presented here as the Slate, offered in 3 colourways. Considered, capable, and unmistakably modern.",
+    "specs": [
+      "~ VIP EDITION \"AAA\"",
+      "~ Submariner Model",
+      "~ WATERPROOF RUBBER SMOOTH STRAP",
+      "~ ULTRA SLIM",
+      "~ DATE WORKING",
+      "~ HIGH QUALITY PLATING",
+      "~ WATER PROOF UPTO 30 MTR",
+      "~ MINERAL SCRATCH PROOF GLASS",
+      "~ WITH PREMIUM BRANDED PACKAGING"
+    ],
     "imageUrl": "/watches/reward-slate-ii/01.jpeg",
     "images": [
       "/watches/reward-slate-ii/02.jpeg",
@@ -1501,87 +1553,55 @@
     "name": "Datejust",
     "brand": "Rolex",
     "category": "Luxury Sport",
-    "priceCents": 21000,
-    "description": "A name synonymous with achievement, Rolex has defined precision watchmaking for over a century. The Datejust presents a 39mm case in mirror-polished steel, water-resistant to 50 metres. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. A piece that wears its confidence quietly.",
-    "imageUrl": "/watches/rolex-datejust/01.jpeg",
-    "images": [
-      "/watches/rolex-datejust/02.jpeg",
-      "/watches/rolex-datejust/03.jpeg",
-      "/watches/rolex-datejust/04.jpeg",
-      "/watches/rolex-datejust/05.jpeg",
-      "/watches/rolex-datejust/06.jpeg",
-      "/watches/rolex-datejust/07.jpeg",
-      "/watches/rolex-datejust/08.jpeg",
-      "/watches/rolex-datejust/09.jpeg",
-      "/watches/rolex-datejust/10.jpeg"
+    "priceCents": 250000,
+    "description": "A name synonymous with achievement, Rolex has defined precision watchmaking for over a century. Presented here as the Datejust. Made for the wrist that notices the details.",
+    "specs": [
+      "Submariner Model",
+      "Quartz Machine",
+      "Fine Quality",
+      "Heavy Weight",
+      "Date Working",
+      "Stainless Steel Chain",
+      "Master Lock"
     ],
+    "imageUrl": "/watches/rolex-datejust/01.jpeg",
+    "images": [],
     "variants": [
       {
         "color": "Classic Black",
         "imageUrl": "/watches/rolex-datejust/01.jpeg",
         "position": 0
-      },
-      {
-        "color": "Silver Steel",
-        "imageUrl": "/watches/rolex-datejust/02.jpeg",
-        "position": 1
-      },
-      {
-        "color": "Rose Gold",
-        "imageUrl": "/watches/rolex-datejust/03.jpeg",
-        "position": 2
-      },
-      {
-        "color": "Two-Tone Gold",
-        "imageUrl": "/watches/rolex-datejust/04.jpeg",
-        "position": 3
-      },
-      {
-        "color": "Midnight Blue",
-        "imageUrl": "/watches/rolex-datejust/05.jpeg",
-        "position": 4
-      },
-      {
-        "color": "Forest Green",
-        "imageUrl": "/watches/rolex-datejust/06.jpeg",
-        "position": 5
-      },
-      {
-        "color": "Tan Leather",
-        "imageUrl": "/watches/rolex-datejust/07.jpeg",
-        "position": 6
-      },
-      {
-        "color": "Gunmetal",
-        "imageUrl": "/watches/rolex-datejust/08.jpeg",
-        "position": 7
-      },
-      {
-        "color": "Champagne",
-        "imageUrl": "/watches/rolex-datejust/09.jpeg",
-        "position": 8
-      },
-      {
-        "color": "Ivory White",
-        "imageUrl": "/watches/rolex-datejust/10.jpeg",
-        "position": 9
       }
     ],
-    "imageCount": 10
+    "imageCount": 1
   },
   {
     "slug": "rolex-daytona",
     "name": "Daytona",
     "brand": "Rolex",
     "category": "Luxury Sport",
-    "priceCents": 18000,
-    "description": "A name synonymous with achievement, Rolex has defined precision watchmaking for over a century. The Daytona presents a 43mm case with an exhibition caseback, water-resistant to 50 metres. Powered by a precision quartz movement, it is finished to a standard that belies its price. Timeless proportions with a contemporary attitude.",
+    "priceCents": 250000,
+    "description": "A name synonymous with achievement, Rolex has defined precision watchmaking for over a century. Presented here as the Daytona, offered in 11 colourways. Designed to be lived in, not just admired.",
+    "specs": [
+      "Round Model",
+      "Quartz Machine",
+      "Fine Quality",
+      "Heavy Weight",
+      "Date Working",
+      "Stainless Steel Chain"
+    ],
     "imageUrl": "/watches/rolex-daytona/01.jpeg",
     "images": [
       "/watches/rolex-daytona/02.jpeg",
       "/watches/rolex-daytona/03.jpeg",
       "/watches/rolex-daytona/04.jpeg",
-      "/watches/rolex-daytona/05.jpeg"
+      "/watches/rolex-daytona/05.jpeg",
+      "/watches/rolex-daytona/06.jpeg",
+      "/watches/rolex-daytona/07.jpeg",
+      "/watches/rolex-daytona/08.jpeg",
+      "/watches/rolex-daytona/09.jpeg",
+      "/watches/rolex-daytona/10.jpeg",
+      "/watches/rolex-daytona/11.jpeg"
     ],
     "variants": [
       {
@@ -1608,17 +1628,57 @@
         "color": "Midnight Blue",
         "imageUrl": "/watches/rolex-daytona/05.jpeg",
         "position": 4
+      },
+      {
+        "color": "Forest Green",
+        "imageUrl": "/watches/rolex-daytona/06.jpeg",
+        "position": 5
+      },
+      {
+        "color": "Tan Leather",
+        "imageUrl": "/watches/rolex-daytona/07.jpeg",
+        "position": 6
+      },
+      {
+        "color": "Gunmetal",
+        "imageUrl": "/watches/rolex-daytona/08.jpeg",
+        "position": 7
+      },
+      {
+        "color": "Champagne",
+        "imageUrl": "/watches/rolex-daytona/09.jpeg",
+        "position": 8
+      },
+      {
+        "color": "Ivory White",
+        "imageUrl": "/watches/rolex-daytona/10.jpeg",
+        "position": 9
+      },
+      {
+        "color": "Burgundy",
+        "imageUrl": "/watches/rolex-daytona/11.jpeg",
+        "position": 10
       }
     ],
-    "imageCount": 5
+    "imageCount": 11
   },
   {
     "slug": "rolex-gmt-master",
     "name": "GMT-Master",
     "brand": "Rolex",
     "category": "Luxury Sport",
-    "priceCents": 18000,
-    "description": "A name synonymous with achievement, Rolex has defined precision watchmaking for over a century. The GMT-Master presents a 36mm case with a slim, wearable profile, water-resistant to 50 metres. Powered by a precision quartz movement, it is finished to a standard that belies its price. Timeless proportions with a contemporary attitude.",
+    "priceCents": 300000,
+    "description": "A name synonymous with achievement, Rolex has defined precision watchmaking for over a century. Presented here as the GMT-Master, offered in 7 colourways. A piece that wears its confidence quietly.",
+    "specs": [
+      "Round Model",
+      "Quartz Machine",
+      "Fine Quality",
+      "Heavy Weight",
+      "Date Working",
+      "Day Working",
+      "Stainless Steel Chain",
+      "Master Lock"
+    ],
     "imageUrl": "/watches/rolex-gmt-master/01.jpeg",
     "images": [
       "/watches/rolex-gmt-master/02.jpeg",
@@ -1626,11 +1686,7 @@
       "/watches/rolex-gmt-master/04.jpeg",
       "/watches/rolex-gmt-master/05.jpeg",
       "/watches/rolex-gmt-master/06.jpeg",
-      "/watches/rolex-gmt-master/07.jpeg",
-      "/watches/rolex-gmt-master/08.jpeg",
-      "/watches/rolex-gmt-master/09.jpeg",
-      "/watches/rolex-gmt-master/10.jpeg",
-      "/watches/rolex-gmt-master/11.jpeg"
+      "/watches/rolex-gmt-master/07.jpeg"
     ],
     "variants": [
       {
@@ -1667,37 +1723,26 @@
         "color": "Tan Leather",
         "imageUrl": "/watches/rolex-gmt-master/07.jpeg",
         "position": 6
-      },
-      {
-        "color": "Gunmetal",
-        "imageUrl": "/watches/rolex-gmt-master/08.jpeg",
-        "position": 7
-      },
-      {
-        "color": "Champagne",
-        "imageUrl": "/watches/rolex-gmt-master/09.jpeg",
-        "position": 8
-      },
-      {
-        "color": "Ivory White",
-        "imageUrl": "/watches/rolex-gmt-master/10.jpeg",
-        "position": 9
-      },
-      {
-        "color": "Burgundy",
-        "imageUrl": "/watches/rolex-gmt-master/11.jpeg",
-        "position": 10
       }
     ],
-    "imageCount": 11
+    "imageCount": 7
   },
   {
     "slug": "rolex-oyster-perpetual",
     "name": "Oyster Perpetual",
     "brand": "Rolex",
     "category": "Automatic",
-    "priceCents": 28000,
-    "description": "A name synonymous with achievement, Rolex has defined precision watchmaking for over a century. The Oyster Perpetual presents a 39mm case in mirror-polished steel, sealed confidently against rain and splashes. Powered by a precision quartz movement, it is finished to a standard that belies its price. Equal parts instrument and statement.",
+    "priceCents": 3000000,
+    "description": "A name synonymous with achievement, Rolex has defined precision watchmaking for over a century. Presented here as the Oyster Perpetual, offered in 10 colourways. Equal parts instrument and statement.",
+    "specs": [
+      "Round Dial",
+      "Fine Quality",
+      "Japanese Movement",
+      "Automatic",
+      "Stainless Steel",
+      "Master Lock",
+      "With Original Box"
+    ],
     "imageUrl": "/watches/rolex-oyster-perpetual/01.jpeg",
     "images": [
       "/watches/rolex-oyster-perpetual/02.jpeg",
@@ -1765,85 +1810,75 @@
     "imageCount": 10
   },
   {
-    "slug": "rolex-sea-dweller",
-    "name": "Sea-Dweller",
-    "brand": "Rolex",
-    "category": "Luxury Sport",
-    "priceCents": 18000,
-    "description": "A name synonymous with achievement, Rolex has defined precision watchmaking for over a century. The Sea-Dweller presents a 41mm case in surgical-grade stainless steel, water-resistant to 50 metres. Powered by a precision quartz movement, it is finished to a standard that belies its price. Timeless proportions with a contemporary attitude.",
-    "imageUrl": "/watches/rolex-sea-dweller/01.jpeg",
-    "images": [
-      "/watches/rolex-sea-dweller/02.jpeg",
-      "/watches/rolex-sea-dweller/03.jpeg",
-      "/watches/rolex-sea-dweller/04.jpeg",
-      "/watches/rolex-sea-dweller/05.jpeg",
-      "/watches/rolex-sea-dweller/06.jpeg",
-      "/watches/rolex-sea-dweller/07.jpeg"
-    ],
-    "variants": [
-      {
-        "color": "Classic Black",
-        "imageUrl": "/watches/rolex-sea-dweller/01.jpeg",
-        "position": 0
-      },
-      {
-        "color": "Silver Steel",
-        "imageUrl": "/watches/rolex-sea-dweller/02.jpeg",
-        "position": 1
-      },
-      {
-        "color": "Rose Gold",
-        "imageUrl": "/watches/rolex-sea-dweller/03.jpeg",
-        "position": 2
-      },
-      {
-        "color": "Two-Tone Gold",
-        "imageUrl": "/watches/rolex-sea-dweller/04.jpeg",
-        "position": 3
-      },
-      {
-        "color": "Midnight Blue",
-        "imageUrl": "/watches/rolex-sea-dweller/05.jpeg",
-        "position": 4
-      },
-      {
-        "color": "Forest Green",
-        "imageUrl": "/watches/rolex-sea-dweller/06.jpeg",
-        "position": 5
-      },
-      {
-        "color": "Tan Leather",
-        "imageUrl": "/watches/rolex-sea-dweller/07.jpeg",
-        "position": 6
-      }
-    ],
-    "imageCount": 7
-  },
-  {
     "slug": "rolex-submariner",
     "name": "Submariner",
     "brand": "Rolex",
     "category": "Luxury Sport",
-    "priceCents": 18000,
-    "description": "A name synonymous with achievement, Rolex has defined precision watchmaking for over a century. The Submariner presents a 39mm case in mirror-polished steel, water-resistant to 50 metres. Powered by a precision quartz movement, it is finished to a standard that belies its price. Timeless proportions with a contemporary attitude.",
+    "priceCents": 300000,
+    "description": "A name synonymous with achievement, Rolex has defined precision watchmaking for over a century. Presented here as the Submariner, offered in 5 colourways. Timeless proportions with a contemporary attitude.",
+    "specs": [
+      "Round Model",
+      "Quartz Machine",
+      "Fine Quality",
+      "Heavy Weight",
+      "Double Time",
+      "Stainless Steel Chain",
+      "Master Lock"
+    ],
     "imageUrl": "/watches/rolex-submariner/01.jpeg",
-    "images": [],
+    "images": [
+      "/watches/rolex-submariner/02.jpeg",
+      "/watches/rolex-submariner/03.jpeg",
+      "/watches/rolex-submariner/04.jpeg",
+      "/watches/rolex-submariner/05.jpeg"
+    ],
     "variants": [
       {
         "color": "Classic Black",
         "imageUrl": "/watches/rolex-submariner/01.jpeg",
         "position": 0
+      },
+      {
+        "color": "Silver Steel",
+        "imageUrl": "/watches/rolex-submariner/02.jpeg",
+        "position": 1
+      },
+      {
+        "color": "Rose Gold",
+        "imageUrl": "/watches/rolex-submariner/03.jpeg",
+        "position": 2
+      },
+      {
+        "color": "Two-Tone Gold",
+        "imageUrl": "/watches/rolex-submariner/04.jpeg",
+        "position": 3
+      },
+      {
+        "color": "Midnight Blue",
+        "imageUrl": "/watches/rolex-submariner/05.jpeg",
+        "position": 4
       }
     ],
-    "imageCount": 1
+    "imageCount": 5
   },
   {
     "slug": "seastar-diver-300",
     "name": "Diver 300",
     "brand": "Seastar",
     "category": "Diver",
-    "priceCents": 8000,
-    "description": "Built for the water, Seastar dive watches balance rugged capability with clean design. The Diver 300 presents a 41mm case in surgical-grade stainless steel, water-resistant to 50 metres. At its heart, an automatic movement with a visible rotor, it is finished to a standard that belies its price. Designed to be lived in, not just admired.",
+    "priceCents": 300000,
+    "description": "Built for the water, Seastar dive watches balance rugged capability with clean design. Presented here as the Diver 300, offered in 4 colourways. Timeless proportions with a contemporary attitude.",
+    "specs": [
+      "AMD Model",
+      "Round Dial",
+      "Rotate Bezel",
+      "Quartz Machine",
+      "Fine Quality",
+      "Heavy Weight",
+      "Date Working",
+      "Silicon Strap",
+      "With Original Brand Pouch"
+    ],
     "imageUrl": "/watches/seastar-diver-300/01.jpeg",
     "images": [
       "/watches/seastar-diver-300/02.jpeg",
@@ -1879,8 +1914,16 @@
     "name": "Active",
     "brand": "SKMEI",
     "category": "Digital",
-    "priceCents": 2500,
-    "description": "SKMEI fuses digital function with sporty, youthful design. The Active presents a 42mm case finished and brushed by hand, water-resistant to 100 metres. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. Considered, capable, and unmistakably modern.",
+    "priceCents": 350000,
+    "description": "SKMEI fuses digital function with sporty, youthful design. Presented here as the Active, offered in 3 colourways. Made for the wrist that notices the details.",
+    "specs": [
+      "GENT'S COLLECTION",
+      "CHINA ASSEMBLED",
+      "WATER RESISTANT",
+      "STAINLESS STEEL CHAIN",
+      "WITH DATE WORKING",
+      "ALL CHRONOGRAPH WORKING"
+    ],
     "imageUrl": "/watches/skmei-active/01.jpeg",
     "images": [
       "/watches/skmei-active/02.jpeg",
@@ -1910,8 +1953,17 @@
     "name": "Digital",
     "brand": "SKMEI",
     "category": "Digital",
-    "priceCents": 2500,
-    "description": "SKMEI fuses digital function with sporty, youthful design. The Digital presents a 41mm case in surgical-grade stainless steel, water-resistant to 100 metres. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. Considered, capable, and unmistakably modern.",
+    "priceCents": 400000,
+    "description": "SKMEI fuses digital function with sporty, youthful design. Presented here as the Digital, offered in 3 colourways. Equal parts instrument and statement.",
+    "specs": [
+      "Dual Time",
+      "Analog/Digital Both",
+      "Fine Quality",
+      "⁠100% Original⁠",
+      "All Functions Working",
+      "⁠Rubber Strap",
+      "Buckle Lock"
+    ],
     "imageUrl": "/watches/skmei-digital/01.jpeg",
     "images": [
       "/watches/skmei-digital/02.jpeg",
@@ -1941,8 +1993,17 @@
     "name": "Tactical",
     "brand": "SKMEI",
     "category": "Digital",
-    "priceCents": 2500,
-    "description": "SKMEI fuses digital function with sporty, youthful design. The Tactical presents a 40mm case beneath a sapphire-coated crystal, water-resistant to 100 metres. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. Considered, capable, and unmistakably modern.",
+    "priceCents": 300000,
+    "description": "SKMEI fuses digital function with sporty, youthful design. Presented here as the Tactical, offered in 2 colourways. Timeless proportions with a contemporary attitude.",
+    "specs": [
+      "Dual Time",
+      "Analog/Digital Both",
+      "Fine Quality",
+      "⁠100% Original⁠",
+      "All Functions Working",
+      "⁠Rubber Strap",
+      "Buckle Lock"
+    ],
     "imageUrl": "/watches/skmei-tactical/01.jpeg",
     "images": [
       "/watches/skmei-tactical/02.jpeg"
@@ -1966,8 +2027,14 @@
     "name": "Executive",
     "brand": "Successway",
     "category": "Fashion",
-    "priceCents": 6000,
-    "description": "Successway dresses the ambitious wrist with sharp, executive lines. The Executive presents a 36mm case with a slim, wearable profile, sealed confidently against rain and splashes. A dependable movement keeps faultless time, it is finished to a standard that belies its price. Designed to be lived in, not just admired.",
+    "priceCents": 350000,
+    "description": "Successway dresses the ambitious wrist with sharp, executive lines. Presented here as the Executive, offered in 6 colourways. Considered, capable, and unmistakably modern.",
+    "specs": [
+      "NEW FRESH DESIGNS ARRIVED",
+      "STAINLESS STEEL CHAIN BRASS CASE DOUBLE TIME WATCH",
+      "TIME, DAY & DATE, ALARM, STOPWATCH, WORKING",
+      "BUTTERFLY LOCK"
+    ],
     "imageUrl": "/watches/successway-executive/01.jpeg",
     "images": [
       "/watches/successway-executive/02.jpeg",
@@ -2014,9 +2081,20 @@
     "slug": "sveston-aviator",
     "name": "Aviator",
     "brand": "Sveston",
-    "category": "Luxury Sport",
-    "priceCents": 9000,
-    "description": "Sveston brings motorsport energy to the wrist with bold chronograph design. The Aviator presents a 44mm case with a screw-down crown, water-resistant to 50 metres. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. Designed to be lived in, not just admired.",
+    "category": "Chronograph",
+    "priceCents": 1500000,
+    "description": "Sveston brings motorsport energy to the wrist with bold chronograph design. Presented here as the Aviator, offered in 2 colourways. A piece that wears its confidence quietly.",
+    "specs": [
+      "Dragon Model",
+      "Date Working",
+      "Round Dial",
+      "Fine Quality",
+      "Japanese Machine",
+      "Stainless Steel",
+      "Master Lock",
+      "1 Year Warranty",
+      "With Original Box"
+    ],
     "imageUrl": "/watches/sveston-aviator/01.jpeg",
     "images": [
       "/watches/sveston-aviator/02.jpeg"
@@ -2039,9 +2117,19 @@
     "slug": "sveston-racer",
     "name": "Racer",
     "brand": "Sveston",
-    "category": "Luxury Sport",
-    "priceCents": 9000,
-    "description": "Sveston brings motorsport energy to the wrist with bold chronograph design. The Racer presents a 40mm case beneath a sapphire-coated crystal, water-resistant to 50 metres. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. Designed to be lived in, not just admired.",
+    "category": "Chronograph",
+    "priceCents": 170000,
+    "description": "Sveston brings motorsport energy to the wrist with bold chronograph design. Presented here as the Racer, offered in 3 colourways. Designed to be lived in, not just admired.",
+    "specs": [
+      "Date Working",
+      "Round Dial",
+      "Fine Quality",
+      "Japanese Machine",
+      "Stainless Steel",
+      "Master Lock",
+      "1 Year Warranty",
+      "With Original Box"
+    ],
     "imageUrl": "/watches/sveston-racer/01.jpeg",
     "images": [
       "/watches/sveston-racer/02.jpeg",
@@ -2067,86 +2155,18 @@
     "imageCount": 3
   },
   {
-    "slug": "sveston-racer-ii",
-    "name": "Racer II",
-    "brand": "Sveston",
-    "category": "Chronograph",
-    "priceCents": 6000,
-    "description": "Sveston brings motorsport energy to the wrist with bold chronograph design. The Racer presents a 42mm case finished and brushed by hand, water-resistant to 50 metres. At its heart, an automatic movement with a visible rotor, it is finished to a standard that belies its price. Timeless proportions with a contemporary attitude.",
-    "imageUrl": "/watches/sveston-racer-ii/01.jpeg",
-    "images": [
-      "/watches/sveston-racer-ii/02.jpeg"
-    ],
-    "variants": [
-      {
-        "color": "Classic Black",
-        "imageUrl": "/watches/sveston-racer-ii/01.jpeg",
-        "position": 0
-      },
-      {
-        "color": "Silver Steel",
-        "imageUrl": "/watches/sveston-racer-ii/02.jpeg",
-        "position": 1
-      }
-    ],
-    "imageCount": 2
-  },
-  {
-    "slug": "sveston-velocity",
-    "name": "Velocity",
-    "brand": "Sveston",
-    "category": "Chronograph",
-    "priceCents": 6000,
-    "description": "Sveston brings motorsport energy to the wrist with bold chronograph design. The Velocity presents a 41mm case in surgical-grade stainless steel, water-resistant to 50 metres. At its heart, an automatic movement with a visible rotor, it is finished to a standard that belies its price. Timeless proportions with a contemporary attitude.",
-    "imageUrl": "/watches/sveston-velocity/01.jpeg",
-    "images": [
-      "/watches/sveston-velocity/02.jpeg",
-      "/watches/sveston-velocity/03.jpeg"
-    ],
-    "variants": [
-      {
-        "color": "Classic Black",
-        "imageUrl": "/watches/sveston-velocity/01.jpeg",
-        "position": 0
-      },
-      {
-        "color": "Silver Steel",
-        "imageUrl": "/watches/sveston-velocity/02.jpeg",
-        "position": 1
-      },
-      {
-        "color": "Rose Gold",
-        "imageUrl": "/watches/sveston-velocity/03.jpeg",
-        "position": 2
-      }
-    ],
-    "imageCount": 3
-  },
-  {
-    "slug": "swister-lan",
-    "name": "Élan",
-    "brand": "Swister",
-    "category": "Luxury Sport",
-    "priceCents": 5000,
-    "description": "Swister blends playful character with contemporary styling. The Élan presents a 36mm case with a slim, wearable profile, sealed confidently against rain and splashes. Powered by a precision quartz movement, it is finished to a standard that belies its price. Timeless proportions with a contemporary attitude.",
-    "imageUrl": "/watches/swister-lan/01.jpeg",
-    "images": [],
-    "variants": [
-      {
-        "color": "Classic Black",
-        "imageUrl": "/watches/swister-lan/01.jpeg",
-        "position": 0
-      }
-    ],
-    "imageCount": 1
-  },
-  {
     "slug": "tissot-le-locle",
     "name": "Le Locle",
     "brand": "Tissot",
     "category": "Swiss Classic",
-    "priceCents": 14000,
-    "description": "Swiss since 1853, Tissot pairs genuine watchmaking heritage with accessible elegance. The Le Locle presents a 42mm case finished and brushed by hand, water-resistant to 100 metres. At its heart, an automatic movement with a visible rotor, it is finished to a standard that belies its price. Made for the wrist that notices the details.",
+    "priceCents": 250000,
+    "description": "Swiss since 1853, Tissot pairs genuine watchmaking heritage with accessible elegance. Presented here as the Le Locle, offered in 5 colourways. Designed to be lived in, not just admired.",
+    "specs": [
+      "GENTS SPORTS COLLECTION",
+      "SILICON STRAP",
+      "MASTER LOCK WITH DATE WORKING",
+      "LIMITED STOCK ORDER AS SOON AS POSSIBLE"
+    ],
     "imageUrl": "/watches/tissot-le-locle/01.jpeg",
     "images": [
       "/watches/tissot-le-locle/02.jpeg",
@@ -2188,8 +2208,14 @@
     "name": "PRX",
     "brand": "Tissot",
     "category": "Swiss Classic",
-    "priceCents": 14000,
-    "description": "Swiss since 1853, Tissot pairs genuine watchmaking heritage with accessible elegance. The PRX presents a 40mm case beneath a sapphire-coated crystal, water-resistant to 100 metres. At its heart, an automatic movement with a visible rotor, it is finished to a standard that belies its price. Made for the wrist that notices the details.",
+    "priceCents": 250000,
+    "description": "Swiss since 1853, Tissot pairs genuine watchmaking heritage with accessible elegance. Presented here as the PRX, offered in 4 colourways. A piece that wears its confidence quietly.",
+    "specs": [
+      "GENTS COLLECTION",
+      "STAINLESS STEEL CHAIN BRASS CASE",
+      "WITH DATE",
+      "WITH BUTTERFLY LOCK"
+    ],
     "imageUrl": "/watches/tissot-prx/01.jpeg",
     "images": [
       "/watches/tissot-prx/02.jpeg",
@@ -2225,8 +2251,16 @@
     "name": "Cosmos",
     "brand": "Universe Point",
     "category": "Fashion",
-    "priceCents": 6500,
-    "description": "Universe Point explores contemporary design with a fashion-forward spirit. The Cosmos presents a 40mm case beneath a sapphire-coated crystal, water-resistant to 100 metres. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. Equal parts instrument and statement.",
+    "priceCents": 250000,
+    "description": "Universe Point explores contemporary design with a fashion-forward spirit. Presented here as the Cosmos, offered in 9 colourways. Timeless proportions with a contemporary attitude.",
+    "specs": [
+      "New Elegant Model",
+      "Date Working",
+      "Round Dial",
+      "Fine Quality",
+      "Quartz Machine",
+      "Stainless Steel"
+    ],
     "imageUrl": "/watches/universe-point-cosmos/01.jpeg",
     "images": [
       "/watches/universe-point-cosmos/02.jpeg",
@@ -2292,8 +2326,16 @@
     "name": "Nova",
     "brand": "Universe Point",
     "category": "Fashion",
-    "priceCents": 6500,
-    "description": "Universe Point explores contemporary design with a fashion-forward spirit. The Nova presents a 43mm case with an exhibition caseback, sealed confidently against rain and splashes. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. Equal parts instrument and statement.",
+    "priceCents": 250000,
+    "description": "Universe Point explores contemporary design with a fashion-forward spirit. Presented here as the Nova, offered in 4 colourways. Considered, capable, and unmistakably modern.",
+    "specs": [
+      "New Elegant Model",
+      "Date Working",
+      "Round Dial",
+      "Fine Quality",
+      "Quartz Machine",
+      "Stainless Steel"
+    ],
     "imageUrl": "/watches/universe-point-nova/01.jpeg",
     "images": [
       "/watches/universe-point-nova/02.jpeg",
@@ -2329,8 +2371,16 @@
     "name": "Orbit",
     "brand": "Universe Point",
     "category": "Fashion",
-    "priceCents": 6500,
-    "description": "Universe Point explores contemporary design with a fashion-forward spirit. The Orbit presents a 44mm case with a screw-down crown, water-resistant to 100 metres. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. Equal parts instrument and statement.",
+    "priceCents": 250000,
+    "description": "Universe Point explores contemporary design with a fashion-forward spirit. Presented here as the Orbit, offered in 8 colourways. Designed to be lived in, not just admired.",
+    "specs": [
+      "New Elegant Model",
+      "Date Working",
+      "Round Dial",
+      "Fine Quality",
+      "Quartz Machine",
+      "Stainless Steel"
+    ],
     "imageUrl": "/watches/universe-point-orbit/01.jpeg",
     "images": [
       "/watches/universe-point-orbit/02.jpeg",
@@ -2390,8 +2440,16 @@
     "name": "Stellar",
     "brand": "Universe Point",
     "category": "Fashion",
-    "priceCents": 6500,
-    "description": "Universe Point explores contemporary design with a fashion-forward spirit. The Stellar presents a 39mm case in mirror-polished steel, sealed confidently against rain and splashes. Driven by a self-winding mechanical movement, it is finished to a standard that belies its price. Equal parts instrument and statement.",
+    "priceCents": 250000,
+    "description": "Universe Point explores contemporary design with a fashion-forward spirit. Presented here as the Stellar, offered in 8 colourways. A piece that wears its confidence quietly.",
+    "specs": [
+      "New Elegant Model",
+      "Date Working",
+      "Round Dial",
+      "Fine Quality",
+      "Quartz Machine",
+      "Stainless Steel"
+    ],
     "imageUrl": "/watches/universe-point-stellar/01.jpeg",
     "images": [
       "/watches/universe-point-stellar/02.jpeg",
@@ -2451,8 +2509,18 @@
     "name": "Active",
     "brand": "X-TL.OK",
     "category": "Sport",
-    "priceCents": 4500,
-    "description": "X-TL.OK is built for movement — sporty, resilient, ready for anything. The Active presents a 40mm case beneath a sapphire-coated crystal, water-resistant to 50 metres. A dependable movement keeps faultless time, it is finished to a standard that belies its price. A piece that wears its confidence quietly.",
+    "priceCents": 350000,
+    "description": "X-TL.OK is built for movement — sporty, resilient, ready for anything. Presented here as the Active, offered in 4 colourways. A piece that wears its confidence quietly.",
+    "specs": [
+      "X-TL.OK Original Watch",
+      "Sports Model",
+      "Dual Time",
+      "Date Working",
+      "Round Dial",
+      "Fine Quality",
+      "Quartz Machine",
+      "Stainless Steel"
+    ],
     "imageUrl": "/watches/x-tl-ok-active/01.jpeg",
     "images": [
       "/watches/x-tl-ok-active/02.jpeg",

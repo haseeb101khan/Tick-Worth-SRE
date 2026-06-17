@@ -4,7 +4,7 @@ import { getMonthlyReport, getOrderStatusReport } from '../../services/reportSer
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
 import { apiErrorMessage } from '../../utils/apiError';
-import { formatMoney, orderStatusLabel } from '../../utils/format';
+import { formatDate, formatMoney, orderStatusLabel } from '../../utils/format';
 import { StatusBadge } from '../StatusBadge';
 
 const MONTHS = [
@@ -44,6 +44,10 @@ export function MonthlyReportPanel() {
   const isOrderAdmin = user?.role === 'SHOPKEEPER' || isOwner;
 
   const load = useCallback(() => {
+    // The year <input> emits intermediate values while typing (e.g. '' → 0, '202' → 202).
+    // Only query once it's a valid 4-digit year, matching the backend bounds, so we don't
+    // fire a 400 + error toast on every keystroke. (Month comes from a <select>, always valid.)
+    if (year < 2000 || year > 2100) return;
     if (isOrderAdmin) {
       getOrderStatusReport(year, month).then(setStatus).catch((e) => toast.error(apiErrorMessage(e)));
     }
@@ -118,7 +122,7 @@ export function MonthlyReportPanel() {
                 {status.orders.map((o) => (
                   <tr key={o.id}>
                     <td className="px-4 py-3 font-mono text-xs font-semibold text-gray-700">{o.orderNumber}</td>
-                    <td className="px-4 py-3 text-gray-500">{new Date(o.createdAt).toLocaleDateString()}</td>
+                    <td className="px-4 py-3 text-gray-500">{formatDate(o.createdAt)}</td>
                     <td className="px-4 py-3">{o.customerName}</td>
                     <td className="px-4 py-3 text-center">{o.itemCount}</td>
                     <td className="px-4 py-3 text-right">{formatMoney(o.totalCents)}</td>
@@ -154,6 +158,10 @@ export function MonthlyReportPanel() {
             <div className="rounded-lg border bg-white p-5 shadow-sm">
               <p className="text-sm text-gray-500">Revenue</p>
               <p className="text-2xl font-semibold">{formatMoney(report.totalRevenueCents)}</p>
+              <p className="text-xs text-gray-400">
+                incl. {formatMoney(report.deliveryRevenueCents)} delivery ·{' '}
+                {formatMoney(report.totalRevenueCents - report.deliveryRevenueCents)} products
+              </p>
             </div>
             <div className="rounded-lg border bg-white p-5 shadow-sm">
               <p className="text-sm text-gray-500">Orders (paid / dispatched / delivered)</p>

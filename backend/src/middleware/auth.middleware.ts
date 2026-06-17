@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { env } from '../config/env';
 import { UnauthorizedError } from '../utils/errors';
 
 export type Role = 'CUSTOMER' | 'SHOPKEEPER' | 'WAREHOUSE_MANAGER' | 'OWNER';
@@ -27,7 +28,7 @@ export function authMiddleware(req: Request, _res: Response, next: NextFunction)
   }
   const token = header.slice('Bearer '.length);
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET as string) as AuthUser;
+    const payload = jwt.verify(token, env.JWT_SECRET) as AuthUser;
     req.user = { id: payload.id, role: payload.role, email: payload.email };
     next();
   } catch {

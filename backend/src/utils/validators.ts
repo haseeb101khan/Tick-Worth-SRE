@@ -35,6 +35,14 @@ export const loginSchema = z.object({
   password: z.string().min(1),
 });
 
+export const verifyEmailSchema = z.object({
+  token: z.string().min(1),
+});
+
+export const resendVerificationSchema = z.object({
+  email: z.string().email(),
+});
+
 // An image is either an http(s) link or an uploaded image as a data: URL.
 const imageUrlSchema = z
   .string()
@@ -72,6 +80,20 @@ export const updateProductSchema = z
     message: 'Provide at least one field to update',
   });
 
+// Replace a product's full set of colour variants. The catalog colour manager sends the whole
+// list; the array order becomes each colour's display position (0 = primary). Each colour needs
+// its own image (an uploaded image or a link).
+export const setVariantsSchema = z.object({
+  variants: z
+    .array(
+      z.object({
+        color: z.string().min(1),
+        imageUrl: imageUrlSchema,
+      }),
+    )
+    .max(30),
+});
+
 export const deliveryMethodSchema = z.enum(['STANDARD', 'EXPRESS', 'PICKUP']);
 
 export const placeOrderSchema = z
@@ -80,6 +102,10 @@ export const placeOrderSchema = z
     paymentMethod: z.enum(['COD', 'ONLINE']),
     deliveryMethod: deliveryMethodSchema.default('STANDARD'),
     shippingAddress: z.string().optional(),
+    // EasyPaisa proof (required for online payment — see refine below).
+    paymentProofUrl: imageUrlSchema.optional(),
+    paymentSenderName: z.string().trim().min(1).max(120).optional(),
+    paymentReference: z.string().trim().max(120).optional(),
     items: z
       .array(
         z.object({
@@ -94,6 +120,15 @@ export const placeOrderSchema = z
   .refine((d) => d.deliveryMethod === 'PICKUP' || (d.shippingAddress?.trim().length ?? 0) > 0, {
     message: 'Shipping address is required for delivery',
     path: ['shippingAddress'],
+  })
+  // Online (EasyPaisa) orders must include the payment screenshot + sender name.
+  .refine((d) => d.paymentMethod !== 'ONLINE' || !!d.paymentProofUrl, {
+    message: 'Upload your EasyPaisa payment screenshot',
+    path: ['paymentProofUrl'],
+  })
+  .refine((d) => d.paymentMethod !== 'ONLINE' || (d.paymentSenderName?.trim().length ?? 0) > 0, {
+    message: 'Enter the name on the account you paid from',
+    path: ['paymentSenderName'],
   });
 
 export const transferSchema = z
