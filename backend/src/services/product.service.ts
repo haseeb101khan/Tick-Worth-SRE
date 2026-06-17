@@ -1,5 +1,6 @@
 import { prisma } from '../prisma';
 import { NotFoundError } from '../utils/errors';
+import { audit } from '../utils/logger';
 
 export interface ProductFilters {
   brand?: string;
@@ -12,6 +13,7 @@ export async function listProducts(filters: ProductFilters) {
   // `mode: 'insensitive'` for the free-text search (e.g. "rolex" matches "Rolex").
   const products = await prisma.product.findMany({
     where: {
+      archived: false, // retired watches never appear in the storefront
       brand: filters.brand ? { equals: filters.brand, mode: 'insensitive' } : undefined,
       category: filters.category ? { equals: filters.category, mode: 'insensitive' } : undefined,
       name: filters.search ? { contains: filters.search, mode: 'insensitive' } : undefined,
@@ -122,4 +124,70 @@ export async function updateProduct(
     data,
     include: { stock: true },
   });
+}
+
+/** Staff: list retired (archived) products so they can be restored from the dashboard. */
+export async function listArchivedProducts() {
+  return prisma.product.findMany({
+    where: { archived: true },
+    include: { stock: true },
+    orderBy: { createdAt: 'desc' },
+  });
+}
+
+/**
+ * Remove a product from the catalogue.
+ *
+ * If the watch has EVER been part of an order, we cannot truly delete it without
+ * corrupting order history / receipts / reports — so we ARCHIVE it (hide from the
+ * storefront, keep the row). If it has never been ordered (e.g. a mistaken entry), we
+ * permanently delete it along with its related rows.
+ *
+ * Returns which path was taken so the UI can tell the user what happened.
+ */
+export async function deleteProduct(id: string, actorId: string) {
+  const product = await prisma.product.findUnique({
+    where: { id },
+    select: { id: true, name: true, archived: true },
+  });
+  if (!product) throw new NotFoundError('Product not found');
+
+  const orderedCount = await prisma.orderItem.count({ where: { productId: id } });
+
+  if (orderedCount > 0) {
+    // Has order history — soft delete to preserve receipts/reports.
+    if (!product.archived) {
+      await prisma.product.update({ where: { id }, data: { archived: true } });
+    }
+    audit('product.archived', { productId: id, name: product.name, by: actorId, orderedCount });
+    return { mode: 'archived' as const, name: product.name };
+  }
+
+  // Never ordered — safe to permanently remove. ProductVariant cascades on delete; the
+  // other tables reference productId without a foreign key, so clear them explicitly.
+  // Stock has a FK with no cascade, so it must go before the product row.
+  await prisma.$transaction([
+    prisma.review.deleteMany({ where: { productId: id } }),
+    prisma.stockMovement.deleteMany({ where: { productId: id } }),
+    prisma.stockRequest.deleteMany({ where: { productId: id } }),
+    prisma.restockRequest.deleteMany({ where: { productId: id } }),
+    prisma.damageReport.deleteMany({ where: { productId: id } }),
+    prisma.stock.deleteMany({ where: { productId: id } }),
+    prisma.product.delete({ where: { id } }),
+  ]);
+  audit('product.deleted', { productId: id, name: product.name, by: actorId });
+  return { mode: 'deleted' as const, name: product.name };
+}
+
+/** Staff: bring a retired product back into the catalogue. */
+export async function restoreProduct(id: string, actorId: string) {
+  const product = await prisma.product.findUnique({ where: { id }, select: { id: true, name: true } });
+  if (!product) throw new NotFoundError('Product not found');
+  const restored = await prisma.product.update({
+    where: { id },
+    data: { archived: false },
+    include: { stock: true },
+  });
+  audit('product.restored', { productId: id, name: product.name, by: actorId });
+  return restored;
 }

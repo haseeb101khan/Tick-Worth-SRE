@@ -36,12 +36,17 @@ model Product {
   imageUrl    String? // primary catalogue image (card + detail hero = first colour)
   images      String[] @default([]) // legacy gallery shots (superseded by variants)
   specs       String[] @default([]) // spec lines from the owner's product sheet (detail-page table)
+  // Soft-delete / retire flag. A watch that has already been ordered is archived rather
+  // than deleted (so order history, receipts and reports stay intact). Archived products
+  // are hidden from the storefront but can be restored from the dashboard.
+  archived    Boolean  @default(false)
   stock       Stock[]
   variants    ProductVariant[] // the colour options this model is offered in
   createdAt   DateTime @default(now())
 
   @@index([brand])
   @@index([category])
+  @@index([archived])
 }
 
 // A colour option for a Product (model). The store's hierarchy is

@@ -9,6 +9,8 @@ export const productRoutes = Router();
 
 // Public catalog
 productRoutes.get('/', asyncHandler(productController.list));
+// Staff-only: retired products list — declared BEFORE '/:id' so it isn't read as an id.
+productRoutes.get('/archived', authMiddleware, requireStaff, asyncHandler(productController.listArchived));
 productRoutes.get('/:id', asyncHandler(productController.getOne));
 
 // Reviews (nested under the product resource)
@@ -20,3 +22,5 @@ productRoutes.post('/:id/reviews', authMiddleware, requireRole('CUSTOMER'), asyn
 productRoutes.post('/', authMiddleware, requireStaff, asyncHandler(productController.create));
 productRoutes.patch('/:id', authMiddleware, requireStaff, asyncHandler(productController.update));
 productRoutes.put('/:id/variants', authMiddleware, requireStaff, asyncHandler(productController.setVariants));
+productRoutes.post('/:id/restore', authMiddleware, requireStaff, asyncHandler(productController.restore));
+productRoutes.delete('/:id', authMiddleware, requireStaff, asyncHandler(productController.remove));

@@ -1,8 +1,11 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { ToastProvider } from './contexts/ToastContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { WhatsAppFab } from './components/WhatsAppFab';
+import { ServerWakeBanner } from './components/ServerWakeBanner';
+import { warmUp } from './utils/wake';
 import { RequireRole, STAFF_ROLES } from './components/ProtectedRoute';
 import { HomePage } from './pages/HomePage';
 import { ProductsPage } from './pages/ProductsPage';
@@ -60,9 +63,16 @@ function StorefrontLayout() {
 }
 
 export default function App() {
+  // Wake the (sleeping) backend the moment the app loads, so it's usually up by the
+  // time the user reaches login/checkout.
+  useEffect(() => {
+    warmUp();
+  }, []);
+
   return (
     <BrowserRouter>
       <ToastProvider>
+        <ServerWakeBanner />
         <Routes>
           {/* Staff portal is a separate door — no storefront navbar/footer. */}
           <Route path="/staff/login" element={<StaffLoginPage />} />

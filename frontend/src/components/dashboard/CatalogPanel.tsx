@@ -1,6 +1,14 @@
-import { ClipboardEvent, DragEvent, FormEvent, useMemo, useState } from 'react';
+import { ClipboardEvent, DragEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 import { Product } from '../../types';
-import { createProduct, getProduct, setProductVariants, updateProduct } from '../../services/productService';
+import {
+  createProduct,
+  deleteProduct,
+  getArchivedProducts,
+  getProduct,
+  restoreProduct,
+  setProductVariants,
+  updateProduct,
+} from '../../services/productService';
 import { useToast } from '../../contexts/ToastContext';
 import { apiErrorMessage } from '../../utils/apiError';
 import { formatMoney, stockAt } from '../../utils/format';
@@ -27,6 +35,16 @@ export function CatalogPanel({ products, onChange }: { products: Product[]; onCh
   const [colors, setColors] = useState<{ color: string; imageUrl: string }[]>([]);
   const [colorBusy, setColorBusy] = useState(false);
   const [uploadingColorIdx, setUploadingColorIdx] = useState<number | null>(null);
+
+  // Retired (archived) products — shown in their own list with a Restore action.
+  const [archived, setArchived] = useState<Product[]>([]);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [restoringId, setRestoringId] = useState<string | null>(null);
+
+  const loadArchived = () => getArchivedProducts().then(setArchived).catch(() => undefined);
+  useEffect(() => {
+    loadArchived();
+  }, []);
 
   const isEditing = editingId !== null;
   const set = (patch: Partial<typeof EMPTY>) => setForm((f) => ({ ...f, ...patch }));
@@ -143,6 +161,45 @@ export function CatalogPanel({ products, onChange }: { products: Product[]; onCh
       toast.error(apiErrorMessage(err));
     } finally {
       setColorBusy(false);
+    }
+  }
+
+  async function handleDelete(p: Product) {
+    const ok = window.confirm(
+      `Remove "${p.name}" from the catalogue?\n\n` +
+        `• If it has past orders, it will be ARCHIVED (hidden from the shop) so receipts and reports stay intact — you can restore it later.\n` +
+        `• If it was never ordered, it will be PERMANENTLY DELETED.`,
+    );
+    if (!ok) return;
+    setDeletingId(p.id);
+    try {
+      const res = await deleteProduct(p.id);
+      toast.success(
+        res.mode === 'deleted'
+          ? `"${res.name}" permanently deleted`
+          : `"${res.name}" had past orders — archived and moved to Retired`,
+      );
+      if (editingId === p.id) resetForm();
+      loadArchived();
+      onChange();
+    } catch (err) {
+      toast.error(apiErrorMessage(err));
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
+  async function handleRestore(p: Product) {
+    setRestoringId(p.id);
+    try {
+      await restoreProduct(p.id);
+      toast.success(`"${p.name}" restored to the catalogue`);
+      loadArchived();
+      onChange();
+    } catch (err) {
+      toast.error(apiErrorMessage(err));
+    } finally {
+      setRestoringId(null);
     }
   }
 
@@ -384,7 +441,8 @@ export function CatalogPanel({ products, onChange }: { products: Product[]; onCh
       )}
       </div>
 
-      {/* Catalogue list */}
+      {/* Catalogue list + retired products */}
+      <div className="space-y-6">
       <div className="overflow-x-auto rounded-lg border bg-white shadow-sm">
         <table className="w-full text-left text-sm">
           <thead className="border-b bg-gray-50 text-xs uppercase text-gray-500">
@@ -427,18 +485,76 @@ export function CatalogPanel({ products, onChange }: { products: Product[]; onCh
                   {stockAt(p, 'SHOP')} / {stockAt(p, 'WAREHOUSE')}
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <button
-                    type="button"
-                    onClick={() => startEdit(p)}
-                    className="rounded border px-3 py-1 text-xs hover:bg-gray-50"
-                  >
-                    Edit
-                  </button>
+                  <div className="flex justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => startEdit(p)}
+                      className="rounded border px-3 py-1 text-xs hover:bg-gray-50"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(p)}
+                      disabled={deletingId === p.id}
+                      className="rounded border border-red-200 px-3 py-1 text-xs text-red-600 hover:bg-red-50 disabled:opacity-50"
+                    >
+                      {deletingId === p.id ? 'Removing…' : 'Delete'}
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Retired (archived) products — hidden from the storefront, restorable here */}
+      {archived.length > 0 && (
+        <div className="rounded-lg border bg-white shadow-sm">
+          <div className="border-b px-4 py-3">
+            <h3 className="font-semibold text-gray-700">Retired watches</h3>
+            <p className="text-xs text-gray-500">
+              Archived because they had past orders. Hidden from the shop, but their order
+              history is kept. Restore one to put it back on sale.
+            </p>
+          </div>
+          <table className="w-full text-left text-sm">
+            <tbody className="divide-y">
+              {archived.map((p) => (
+                <tr key={p.id} className="text-gray-500">
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      <WatchImage
+                        name={p.name}
+                        brand={p.brand}
+                        imageUrl={p.imageUrl}
+                        width={120}
+                        className="aspect-square w-10 shrink-0 rounded opacity-60"
+                      />
+                      <div>
+                        <p className="font-medium text-gray-700">{p.name}</p>
+                        <p className="text-xs">{p.brand}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-right">{formatMoney(p.priceCents)}</td>
+                  <td className="px-4 py-3 text-right">
+                    <button
+                      type="button"
+                      onClick={() => handleRestore(p)}
+                      disabled={restoringId === p.id}
+                      className="rounded border border-green-200 px-3 py-1 text-xs text-green-700 hover:bg-green-50 disabled:opacity-50"
+                    >
+                      {restoringId === p.id ? 'Restoring…' : 'Restore'}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       </div>
     </div>
   );

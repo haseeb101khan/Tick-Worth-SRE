@@ -46,3 +46,22 @@ export async function setProductVariants(
   const { data } = await api.put<ProductVariant[]>(`/products/${id}/variants`, { variants });
   return data;
 }
+
+// Staff-only: list retired (archived) products.
+export async function getArchivedProducts(): Promise<Product[]> {
+  const { data } = await api.get<Product[]>('/products/archived');
+  return data;
+}
+
+// Staff-only: remove a product. The server permanently deletes it if it has never been
+// ordered, otherwise it archives it (to preserve order history) — `mode` says which.
+export async function deleteProduct(id: string): Promise<{ mode: 'deleted' | 'archived'; name: string }> {
+  const { data } = await api.delete<{ mode: 'deleted' | 'archived'; name: string }>(`/products/${id}`);
+  return data;
+}
+
+// Staff-only: restore a retired product back into the catalogue.
+export async function restoreProduct(id: string): Promise<Product> {
+  const { data } = await api.post<Product>(`/products/${id}/restore`);
+  return data;
+}
