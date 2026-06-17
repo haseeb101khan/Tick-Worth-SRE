@@ -5,12 +5,6 @@ import { useToast } from '../contexts/ToastContext';
 import { apiErrorMessage } from '../utils/apiError';
 import { STAFF_ROLES } from '../components/ProtectedRoute';
 
-const DEMO_STAFF: { label: string; email: string }[] = [
-  { label: 'Shopkeeper', email: 'shop@tickworth.test' },
-  { label: 'Warehouse Manager', email: 'warehouse@tickworth.test' },
-  { label: 'Owner', email: 'owner@tickworth.test' },
-];
-
 /**
  * Internal staff portal — a separate door from the public storefront login.
  * No self-registration here: staff accounts are provisioned by the owner.
@@ -88,24 +82,7 @@ export function StaffLoginPage() {
           </p>
         </form>
 
-        <div className="mt-6 rounded-lg border border-gray-700 bg-gray-800 p-4 text-center">
-          <p className="mb-2 text-sm font-medium text-gray-300">Demo staff (password: password123)</p>
-          <div className="flex flex-wrap justify-center gap-2">
-            {DEMO_STAFF.map((s) => (
-              <button
-                key={s.email}
-                type="button"
-                disabled={busy}
-                onClick={() => doLogin(s.email, 'password123')}
-                className="rounded border border-gray-600 bg-gray-700 px-3 py-1 text-xs text-gray-100 hover:bg-gray-600 disabled:opacity-50"
-              >
-                {s.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <p className="mt-4 text-center text-xs text-gray-500">
+        <p className="mt-6 text-center text-xs text-gray-500">
           <Link to="/" className="hover:text-gray-300 hover:underline">
             ← Back to storefront
           </Link>

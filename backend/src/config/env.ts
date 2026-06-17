@@ -14,6 +14,12 @@ const schema = z.object({
   JWT_EXPIRES_IN: z.string().default('7d'),
   APP_URL: z.string().default('http://localhost:5173'),
   CORS_ORIGIN: z.string().optional(), // comma-separated allow-list (production domains)
+  // TEMPORARY: when 'true', new customers are verified on sign-up and no verification
+  // email is sent. Needed because our host (Railway) blocks outbound SMTP, so the Gmail
+  // verification email can't be delivered. Flip back to 'false' once email is sent over
+  // an HTTP provider (e.g. Brevo) instead of SMTP. Kept as an env flag so it can be
+  // toggled without a code change.
+  AUTO_VERIFY_CUSTOMERS: z.string().optional(),
   // Optional integrations — features degrade gracefully when absent.
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
@@ -46,3 +52,9 @@ if (env.JWT_SECRET.length < 32) {
 }
 
 export const isProd = env.NODE_ENV === 'production';
+
+// TEMPORARY auth toggle (see AUTO_VERIFY_CUSTOMERS above).
+export const autoVerifyCustomers = env.AUTO_VERIFY_CUSTOMERS === 'true';
+if (autoVerifyCustomers) {
+  logger.warn('AUTO_VERIFY_CUSTOMERS is ON — new customers skip email verification.');
+}

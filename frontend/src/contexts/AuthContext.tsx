@@ -5,8 +5,9 @@ import * as authService from '../services/authService';
 interface AuthContextValue {
   user: User | null;
   login: (email: string, password: string) => Promise<User>;
-  // Registration sends a verification email; it does NOT sign the user in.
-  register: (name: string, email: string, password: string) => Promise<{ needsVerification: boolean; email: string }>;
+  // Registration usually sends a verification email (no sign-in). When the server
+  // auto-verifies (SMTP unavailable), it returns a token and we sign the user in here.
+  register: (name: string, email: string, password: string) => Promise<authService.RegisterResult>;
   verifyEmail: (token: string) => Promise<User>;
   logout: () => void;
 }
@@ -33,8 +34,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function register(name: string, email: string, password: string) {
-    // Returns { needsVerification, email } — the user verifies via the emailed link.
-    return authService.register(name, email, password);
+    const result = await authService.register(name, email, password);
+    // Auto-verify path: a token came back, so sign the user in straight away.
+    if (result.token && result.user) persist(result.token, result.user);
+    return result;
   }
 
   async function verifyEmail(token: string) {

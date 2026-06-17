@@ -11,13 +11,21 @@ export async function login(email: string, password: string): Promise<AuthRespon
   return data;
 }
 
-// Registration no longer logs you in — it emails a verification link first.
+// Registration normally emails a verification link first (needsVerification: true).
+// While auto-verify is enabled on the server (host blocks SMTP), it instead returns a
+// token + user so the customer is signed in immediately.
+export interface RegisterResult {
+  needsVerification: boolean;
+  email: string;
+  token?: string;
+  user?: User;
+}
 export async function register(
   name: string,
   email: string,
   password: string,
-): Promise<{ needsVerification: boolean; email: string }> {
-  const { data } = await api.post<{ needsVerification: boolean; email: string }>('/auth/register', {
+): Promise<RegisterResult> {
+  const { data } = await api.post<RegisterResult>('/auth/register', {
     name,
     email,
     password,

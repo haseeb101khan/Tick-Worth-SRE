@@ -1,5 +1,5 @@
 import { FormEvent, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { resendVerification } from '../services/authService';
@@ -9,6 +9,7 @@ import { storyImage } from '../utils/images';
 export function RegisterPage() {
   const { register } = useAuth();
   const toast = useToast();
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,8 +20,14 @@ export function RegisterPage() {
     e.preventDefault();
     setBusy(true);
     try {
-      await register(name, email, password);
-      setSent(true);
+      const result = await register(name, email, password);
+      if (result.needsVerification) {
+        setSent(true); // show the "check your email" panel
+      } else {
+        // Auto-verified + signed in — go straight to the store.
+        toast.success('Welcome to Tick Worth.');
+        navigate('/', { replace: true });
+      }
     } catch (err) {
       toast.error(apiErrorMessage(err));
     } finally {

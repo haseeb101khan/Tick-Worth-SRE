@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { randomBytes } from 'node:crypto';
 import { prisma } from '../prisma';
-import { env } from '../config/env';
+import { env, autoVerifyCustomers } from '../config/env';
 import { BadRequestError, UnauthorizedError } from '../utils/errors';
 import { RegisterInput, LoginInput } from '../utils/validators';
 import { sendVerificationEmail } from './email.service';
@@ -36,11 +36,25 @@ export async function register(input: RegisterInput) {
       passwordHash,
       // Self-service registration is always a customer; staff are seeded/assigned.
       role: 'CUSTOMER',
-      emailVerified: false,
-      verifyToken,
-      verifyTokenExpiry,
+      // When auto-verify is on (host blocks SMTP), the account is active immediately.
+      emailVerified: autoVerifyCustomers,
+      verifyToken: autoVerifyCustomers ? null : verifyToken,
+      verifyTokenExpiry: autoVerifyCustomers ? null : verifyTokenExpiry,
     },
   });
+
+  // TEMPORARY: skip the email + verification gate while SMTP is unavailable. Sign the
+  // customer in straight away so registration works end-to-end on the deployed host.
+  if (autoVerifyCustomers) {
+    audit('user.register', { userId: user.id, email: user.email, autoVerified: true });
+    const token = signToken(user);
+    return {
+      needsVerification: false,
+      email: user.email,
+      token,
+      user: { id: user.id, name: user.name, email: user.email, role: user.role },
+    };
+  }
 
   await sendVerificationEmail(user.email, user.name, verifyToken);
   audit('user.register', { userId: user.id, email: user.email });
