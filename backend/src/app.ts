@@ -31,14 +31,22 @@ app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } })); // s
 
 // CORS allow-list: the configured app URL + any CORS_ORIGIN entries, plus any localhost
 // port for local dev. Non-browser callers (no Origin header) are allowed.
+// Normalise by stripping any trailing slash so e.g. "https://x.vercel.app/" set in an
+// env var still matches the browser's Origin header ("https://x.vercel.app").
+const stripSlash = (s: string) => s.replace(/\/+$/, '');
 const allowedOrigins = new Set(
-  [env.APP_URL, ...(env.CORS_ORIGIN?.split(',') ?? [])].map((s) => s.trim()).filter(Boolean),
+  [env.APP_URL, ...(env.CORS_ORIGIN?.split(',') ?? [])]
+    .map((s) => stripSlash(s.trim()))
+    .filter(Boolean),
 );
 app.use(
   cors({
     origin(origin, cb) {
       if (!origin) return cb(null, true);
-      if (allowedOrigins.has(origin) || /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+      if (
+        allowedOrigins.has(stripSlash(origin)) ||
+        /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)
+      ) {
         return cb(null, true);
       }
       cb(new Error('Not allowed by CORS'));
