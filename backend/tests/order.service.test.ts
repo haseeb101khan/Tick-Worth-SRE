@@ -10,6 +10,13 @@ let staffId: string;
 let productId: string;
 let courierId: string;
 
+const pakistanDelivery = {
+  shippingAddress: 'House 12, Street 4, F-8/2 near Markaz',
+  shippingCity: 'Islamabad',
+  shippingProvince: 'Islamabad Capital Territory',
+  shippingPostalCode: '44000',
+} as const;
+
 async function qty(location: string) {
   const stock = await prisma.stock.findUnique({
     where: { productId_location: { productId, location } },
@@ -62,11 +69,12 @@ describe('placeOrder', () => {
     const order = await placeOrder(customerId, {
       channel: 'ONLINE',
       paymentMethod: 'COD',
-      shippingAddress: '1 Test St',
+      ...pakistanDelivery,
       items: [{ productId, quantity: 2 }],
     });
 
     expect(order.status).toBe('PENDING');
+    expect(order.shippingAddress).toContain('Islamabad, Islamabad Capital Territory');
     expect(order.totalCents).toBe(20000); // 2 × 10000, never from client input
     expect(await qty('SHOP')).toBe(3);
 
@@ -80,6 +88,7 @@ describe('placeOrder', () => {
       placeOrder(customerId, {
         channel: 'ONLINE',
         paymentMethod: 'COD',
+        ...pakistanDelivery,
         items: [{ productId, quantity: 99 }],
       }),
     ).rejects.toBeInstanceOf(ConflictError);
@@ -101,6 +110,7 @@ describe('placeOrder', () => {
       placeOrder(customerId, {
         channel: 'ONLINE',
         paymentMethod: 'COD',
+        ...pakistanDelivery,
         items: [
           { productId, quantity: 2 }, // would succeed alone
           { productId: second.id, quantity: 1 }, // fails — whole tx must roll back
@@ -122,11 +132,25 @@ describe('placeOrder', () => {
     expect(order.paymentConfirmed).toBe(true);
   });
 
+  it('rejects delivery addresses outside Pakistan', async () => {
+    await expect(
+      placeOrder(customerId, {
+        channel: 'ONLINE',
+        paymentMethod: 'COD',
+        shippingAddress: '221B Baker Street near Regent Park London',
+        shippingCity: 'London',
+        shippingProvince: 'Punjab',
+        items: [{ productId, quantity: 1 }],
+      }),
+    ).rejects.toBeInstanceOf(BadRequestError);
+  });
+
   it('emits a LOW_STOCK notification to staff when crossing the reorder level', async () => {
     // SHOP 5, reorder 2: ordering 3 lands exactly on the level (5→2, crossing).
     await placeOrder(customerId, {
       channel: 'ONLINE',
       paymentMethod: 'COD',
+      ...pakistanDelivery,
       items: [{ productId, quantity: 3 }],
     });
     const notifs = await prisma.notification.findMany({ where: { userId: staffId } });
@@ -137,6 +161,7 @@ describe('placeOrder', () => {
     await placeOrder(customerId, {
       channel: 'ONLINE',
       paymentMethod: 'COD',
+      ...pakistanDelivery,
       items: [{ productId, quantity: 1 }],
     });
     expect(await prisma.notification.count({ where: { userId: staffId } })).toBe(1);
@@ -148,6 +173,7 @@ describe('order status + cancel', () => {
     const order = await placeOrder(customerId, {
       channel: 'ONLINE',
       paymentMethod: 'COD',
+      ...pakistanDelivery,
       items: [{ productId, quantity: 1 }],
     });
 
@@ -165,6 +191,7 @@ describe('order status + cancel', () => {
     const order = await placeOrder(customerId, {
       channel: 'ONLINE',
       paymentMethod: 'COD',
+      ...pakistanDelivery,
       items: [{ productId, quantity: 2 }],
     });
     expect(await qty('SHOP')).toBe(3);
@@ -184,6 +211,7 @@ describe('order status + cancel', () => {
     const order = await placeOrder(customerId, {
       channel: 'ONLINE',
       paymentMethod: 'COD',
+      ...pakistanDelivery,
       items: [{ productId, quantity: 1 }],
     });
     await updateOrderStatus(order.id, 'PAID');
@@ -196,6 +224,7 @@ describe('order status + cancel', () => {
     const order2 = await placeOrder(customerId, {
       channel: 'ONLINE',
       paymentMethod: 'COD',
+      ...pakistanDelivery,
       items: [{ productId, quantity: 1 }],
     });
     await cancelOrder(order2.id, { id: customerId, role: 'CUSTOMER' });
@@ -208,6 +237,7 @@ describe('order status + cancel', () => {
     const order = await placeOrder(customerId, {
       channel: 'ONLINE',
       paymentMethod: 'COD',
+      ...pakistanDelivery,
       items: [{ productId, quantity: 1 }],
     });
     const stranger = await prisma.user.create({
@@ -226,7 +256,7 @@ describe('delivery + couriers', () => {
       channel: 'ONLINE',
       paymentMethod: 'COD',
       deliveryMethod: 'EXPRESS',
-      shippingAddress: '1 Fast Ln',
+      ...pakistanDelivery,
       items: [{ productId, quantity: 1 }],
     });
     expect(order.orderNumber).toMatch(/^TW-\d{6}$/);
@@ -240,7 +270,7 @@ describe('delivery + couriers', () => {
       channel: 'ONLINE',
       paymentMethod: 'COD',
       deliveryMethod: 'STANDARD',
-      shippingAddress: '1 Test St',
+      ...pakistanDelivery,
       items: [{ productId, quantity: 1 }],
     });
     await updateOrderStatus(order.id, 'PAID');
@@ -256,7 +286,7 @@ describe('delivery + couriers', () => {
       channel: 'ONLINE',
       paymentMethod: 'COD',
       deliveryMethod: 'STANDARD',
-      shippingAddress: '1 Test St',
+      ...pakistanDelivery,
       items: [{ productId, quantity: 1 }],
     });
     await updateOrderStatus(order.id, 'PAID');

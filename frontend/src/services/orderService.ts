@@ -6,6 +6,11 @@ export interface PlaceOrderInput {
   paymentMethod: 'COD' | 'ONLINE';
   deliveryMethod: DeliveryMethod;
   shippingAddress?: string;
+  shippingCity?: string;
+  shippingProvince?: string;
+  shippingPostalCode?: string;
+  shippingLatitude?: number;
+  shippingLongitude?: number;
   paymentProofUrl?: string;
   paymentSenderName?: string;
   paymentReference?: string;

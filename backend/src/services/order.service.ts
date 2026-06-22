@@ -3,6 +3,7 @@ import { BadRequestError, ConflictError, ForbiddenError, NotFoundError } from '.
 import { PlaceOrderInput } from '../utils/validators';
 import { notifyIfLowStock } from './notification.service';
 import { audit } from '../utils/logger';
+import { formatPakistanShippingAddress, validatePakistanDeliveryAddress } from '../utils/pakistanAddress';
 
 // Delivery options + their fees (server-side — never trust a fee from the client).
 // Fees are in paisa (PKR minor units). EXPRESS default = Rs 500 — adjust to your real rate.
@@ -52,6 +53,11 @@ export async function placeOrder(customerId: string, input: PlaceOrderInput) {
     // In-store purchases are collected on the spot; online orders use the chosen
     // method (the schema defaults it to STANDARD; the ?? guards direct callers).
     const deliveryMethod = isStore ? 'PICKUP' : (input.deliveryMethod ?? 'STANDARD');
+    const needsShipping = deliveryMethod !== 'PICKUP';
+    const addressValidation = needsShipping ? validatePakistanDeliveryAddress(input) : { ok: true as const };
+    if (!addressValidation.ok) throw new BadRequestError(addressValidation.message);
+
+    const shippingAddress = needsShipping ? formatPakistanShippingAddress(input) : undefined;
     const deliveryFeeCents = DELIVERY_OPTIONS[deliveryMethod].feeCents;
     const totalCents = subtotalCents + deliveryFeeCents;
 
@@ -70,7 +76,7 @@ export async function placeOrder(customerId: string, input: PlaceOrderInput) {
         paymentMethod: input.paymentMethod,
         deliveryMethod,
         deliveryFeeCents,
-        shippingAddress: input.shippingAddress,
+        shippingAddress,
         status: isStore ? 'DELIVERED' : 'PENDING',
         // Online (EasyPaisa) payments are NOT auto-confirmed — the shopkeeper verifies
         // the uploaded screenshot, then marks the order PAID. Only in-store sales are

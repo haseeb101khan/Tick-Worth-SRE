@@ -11,6 +11,12 @@ import { WatchImage } from '../components/WatchImage';
 import { uploadPaymentProof } from '../utils/imageUpload';
 import { CONTACT } from '../utils/contact';
 import { DELIVERY_OPTIONS, DeliveryMethod, Order } from '../types';
+import {
+  PAKISTAN_CITIES,
+  PAKISTAN_PROVINCES,
+  isWithinPakistanBounds,
+  validatePakistanAddressDraft,
+} from '../utils/pakistanAddress';
 
 export function CartPage() {
   const { items, setQuantity, removeItem, clear, totalCents } = useCart();
@@ -19,6 +25,16 @@ export function CartPage() {
   const navigate = useNavigate();
 
   const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [province, setProvince] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [liveLocation, setLiveLocation] = useState<{
+    latitude: number;
+    longitude: number;
+    accuracy?: number;
+  } | null>(null);
+  const [locationStatus, setLocationStatus] = useState<'idle' | 'locating' | 'verified' | 'error'>('idle');
+  const [locationMessage, setLocationMessage] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>('COD');
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>('STANDARD');
   const [busy, setBusy] = useState(false);
@@ -43,6 +59,50 @@ export function CartPage() {
     }
   }
 
+  function handleUseLiveLocation() {
+    if (!navigator.geolocation) {
+      setLocationStatus('error');
+      setLocationMessage('Live location is not available in this browser.');
+      toast.error('Live location is not available in this browser');
+      return;
+    }
+
+    setLocationStatus('locating');
+    setLocationMessage('Requesting location permission...');
+
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        if (!isWithinPakistanBounds(coords.latitude, coords.longitude)) {
+          setLiveLocation(null);
+          setLocationStatus('error');
+          setLocationMessage('That live location is outside Pakistan.');
+          toast.error('Orders can only be delivered inside Pakistan');
+          return;
+        }
+
+        setLiveLocation({
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+          accuracy: coords.accuracy,
+        });
+        setLocationStatus('verified');
+        setLocationMessage(
+          `Live location verified inside Pakistan${
+            Number.isFinite(coords.accuracy) ? `, accuracy about ${Math.round(coords.accuracy)}m` : ''
+          }.`,
+        );
+        toast.success('Live location verified inside Pakistan');
+      },
+      (err) => {
+        setLiveLocation(null);
+        setLocationStatus('error');
+        setLocationMessage(err.code === err.PERMISSION_DENIED ? 'Location permission was denied.' : 'Could not read live location.');
+        toast.error(err.code === err.PERMISSION_DENIED ? 'Location permission was denied' : 'Could not read live location');
+      },
+      { enableHighAccuracy: true, maximumAge: 5 * 60 * 1000, timeout: 12_000 },
+    );
+  }
+
   const isPickup = deliveryMethod === 'PICKUP';
   const deliveryFee = DELIVERY_OPTIONS.find((o) => o.value === deliveryMethod)?.feeCents ?? 0;
   const grandTotal = totalCents + deliveryFee;
@@ -52,6 +112,20 @@ export function CartPage() {
     if (!user) {
       navigate('/login', { state: { from: '/cart' } });
       return;
+    }
+    if (!isPickup) {
+      const addressError = validatePakistanAddressDraft({
+        address,
+        city,
+        province,
+        postalCode,
+        latitude: liveLocation?.latitude,
+        longitude: liveLocation?.longitude,
+      });
+      if (addressError) {
+        toast.error(addressError);
+        return;
+      }
     }
     if (paymentMethod === 'ONLINE' && (!proofUrl || !senderName.trim())) {
       toast.error('Upload your EasyPaisa screenshot and enter the sender name');
@@ -66,7 +140,12 @@ export function CartPage() {
         channel: 'ONLINE',
         paymentMethod,
         deliveryMethod,
-        shippingAddress: isPickup ? undefined : address,
+        shippingAddress: isPickup ? undefined : address.trim(),
+        shippingCity: isPickup ? undefined : city,
+        shippingProvince: isPickup ? undefined : province,
+        shippingPostalCode: isPickup || !postalCode.trim() ? undefined : postalCode.trim(),
+        shippingLatitude: isPickup ? undefined : liveLocation?.latitude,
+        shippingLongitude: isPickup ? undefined : liveLocation?.longitude,
         paymentProofUrl: paymentMethod === 'ONLINE' ? proofUrl : undefined,
         paymentSenderName: paymentMethod === 'ONLINE' ? senderName.trim() : undefined,
         paymentReference: paymentMethod === 'ONLINE' ? reference.trim() || undefined : undefined,
@@ -185,16 +264,80 @@ export function CartPage() {
             </div>
 
             {!isPickup && (
-              <div className="mt-5">
-                <label className="label-luxe">Shipping address</label>
-                <textarea
-                  required
-                  rows={3}
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  className="input-luxe"
-                  placeholder="Street, city, postcode"
-                />
+              <div className="mt-5 space-y-3">
+                <div>
+                  <label className="label-luxe">House, street, area</label>
+                  <textarea
+                    required
+                    rows={3}
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="input-luxe"
+                    placeholder="House 12, Street 4, F-8/2, near Markaz"
+                  />
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="label-luxe">City / district</label>
+                    <select required value={city} onChange={(e) => setCity(e.target.value)} className="input-luxe">
+                      <option value="">Select city</option>
+                      {PAKISTAN_CITIES.map((name) => (
+                        <option key={name} value={name}>
+                          {name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="label-luxe">Province / region</label>
+                    <select required value={province} onChange={(e) => setProvince(e.target.value)} className="input-luxe">
+                      <option value="">Select region</option>
+                      {PAKISTAN_PROVINCES.map((name) => (
+                        <option key={name} value={name}>
+                          {name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="label-luxe">Postal code</label>
+                  <input
+                    value={postalCode}
+                    onChange={(e) => setPostalCode(e.target.value.replace(/\D/g, '').slice(0, 5))}
+                    inputMode="numeric"
+                    maxLength={5}
+                    className="input-luxe"
+                    placeholder="Optional 5 digit code"
+                  />
+                </div>
+
+                <div className="border border-ink/10 bg-ivory/60 p-3">
+                  <button
+                    type="button"
+                    onClick={handleUseLiveLocation}
+                    disabled={locationStatus === 'locating'}
+                    className="btn-outline w-full border-ink/25 text-ink hover:bg-ink hover:text-ivory"
+                  >
+                    {locationStatus === 'locating'
+                      ? 'Checking location...'
+                      : liveLocation
+                        ? 'Refresh live location'
+                        : 'Use current location'}
+                  </button>
+                  {locationMessage && (
+                    <p
+                      className={`mt-2 text-xs ${
+                        locationStatus === 'verified' ? 'text-green-700' : 'text-red-600'
+                      }`}
+                    >
+                      {locationMessage}
+                    </p>
+                  )}
+                </div>
               </div>
             )}
 

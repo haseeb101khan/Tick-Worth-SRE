@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { validatePakistanDeliveryAddress } from './pakistanAddress';
 
 // Shared Zod schemas. Reuse these on the frontend too if you copy the file across.
 
@@ -101,7 +102,12 @@ export const placeOrderSchema = z
     channel: z.enum(['ONLINE', 'STORE']),
     paymentMethod: z.enum(['COD', 'ONLINE']),
     deliveryMethod: deliveryMethodSchema.default('STANDARD'),
-    shippingAddress: z.string().optional(),
+    shippingAddress: z.string().trim().max(240).optional(),
+    shippingCity: z.string().trim().max(80).optional(),
+    shippingProvince: z.string().trim().max(80).optional(),
+    shippingPostalCode: z.string().trim().max(5).optional(),
+    shippingLatitude: z.number().min(-90).max(90).optional(),
+    shippingLongitude: z.number().min(-180).max(180).optional(),
     // EasyPaisa proof (required for online payment — see refine below).
     paymentProofUrl: imageUrlSchema.optional(),
     paymentSenderName: z.string().trim().min(1).max(120).optional(),
@@ -116,19 +122,35 @@ export const placeOrderSchema = z
       )
       .min(1),
   })
-  // A shipping address is required unless the customer is collecting in store.
-  .refine((d) => d.deliveryMethod === 'PICKUP' || (d.shippingAddress?.trim().length ?? 0) > 0, {
-    message: 'Shipping address is required for delivery',
-    path: ['shippingAddress'],
-  })
-  // Online (EasyPaisa) orders must include the payment screenshot + sender name.
-  .refine((d) => d.paymentMethod !== 'ONLINE' || !!d.paymentProofUrl, {
-    message: 'Upload your EasyPaisa payment screenshot',
-    path: ['paymentProofUrl'],
-  })
-  .refine((d) => d.paymentMethod !== 'ONLINE' || (d.paymentSenderName?.trim().length ?? 0) > 0, {
-    message: 'Enter the name on the account you paid from',
-    path: ['paymentSenderName'],
+  .superRefine((d, ctx) => {
+    // A Pakistan delivery address is required unless the customer is collecting in store.
+    if (d.channel !== 'STORE' && d.deliveryMethod !== 'PICKUP') {
+      const address = validatePakistanDeliveryAddress(d);
+      if (!address.ok) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: address.message,
+          path: [address.path],
+        });
+      }
+    }
+
+    // Online (EasyPaisa) orders must include the payment screenshot + sender name.
+    if (d.paymentMethod === 'ONLINE' && !d.paymentProofUrl) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Upload your EasyPaisa payment screenshot',
+        path: ['paymentProofUrl'],
+      });
+    }
+
+    if (d.paymentMethod === 'ONLINE' && (d.paymentSenderName?.trim().length ?? 0) === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Enter the name on the account you paid from',
+        path: ['paymentSenderName'],
+      });
+    }
   });
 
 export const transferSchema = z
